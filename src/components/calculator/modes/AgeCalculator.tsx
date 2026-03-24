@@ -17,10 +17,13 @@ export function AgeCalculator() {
     }, []);
 
     useEffect(() => {
-        if (!birthdate) return;
-        const url = new URL(window.location.href);
-        url.searchParams.set('dob', birthdate);
-        window.history.replaceState({}, '', url);
+        const timeout = setTimeout(() => {
+            if (!birthdate) return;
+            const url = new URL(window.location.href);
+            url.searchParams.set('dob', birthdate);
+            window.history.replaceState({}, '', url);
+        }, 500);
+        return () => clearTimeout(timeout);
     }, [birthdate]);
 
     const calculate = () => {

@@ -24,13 +24,16 @@ export function AddSubtractTime() {
     }, []);
 
     useEffect(() => {
-        if (!baseDate && amount === '') return;
-        const url = new URL(window.location.href);
-        if (baseDate) url.searchParams.set('base', baseDate);
-        if (amount !== '') url.searchParams.set('amount', amount.toString());
-        url.searchParams.set('unit', unit);
-        url.searchParams.set('op', operation);
-        window.history.replaceState({}, '', url);
+        const timeout = setTimeout(() => {
+            if (!baseDate && amount === '') return;
+            const url = new URL(window.location.href);
+            if (baseDate) url.searchParams.set('base', baseDate);
+            if (amount !== '') url.searchParams.set('amount', amount.toString());
+            url.searchParams.set('unit', unit);
+            url.searchParams.set('op', operation);
+            window.history.replaceState({}, '', url);
+        }, 300);
+        return () => clearTimeout(timeout);
     }, [baseDate, amount, unit, operation]);
 
     const calculate = () => {

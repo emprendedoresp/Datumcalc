@@ -21,11 +21,14 @@ export function DateDifference() {
     }, []);
 
     useEffect(() => {
-        if (!start && !end) return;
-        const url = new URL(window.location.href);
-        if (start) url.searchParams.set('start', start);
-        if (end) url.searchParams.set('end', end);
-        window.history.replaceState({}, '', url);
+        const timeout = setTimeout(() => {
+            if (!start && !end) return;
+            const url = new URL(window.location.href);
+            if (start) url.searchParams.set('start', start);
+            if (end) url.searchParams.set('end', end);
+            window.history.replaceState({}, '', url);
+        }, 500);
+        return () => clearTimeout(timeout);
     }, [start, end]);
 
     const calculate = () => {
