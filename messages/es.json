@@ -1,0 +1,11 @@
+{
+    "Header": {
+        "title": "Calculadora de Fechas"
+    },
+    "Modes": {
+        "dateDifference": "Diferencia de Fechas",
+        "addSubtract": "Sumar/Restar Fecha",
+        "businessDays": "Días Hábiles",
+        "ageCalculator": "Calculadora de Edad"
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "Header": {
+        "title": "Calculadora de Datas"
+    },
+    "Modes": {
+        "dateDifference": "Diferença de Datas",
+        "addSubtract": "Adicionar/Subtrair Data",
+        "businessDays": "Dias Úteis",
+        "ageCalculator": "Calculadora de Idade"
+    }
+}
