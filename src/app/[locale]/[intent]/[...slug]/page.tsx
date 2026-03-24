@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import { SEOContentBlock } from '@/components/seo/SEOContentBlock';
 import { FAQBlock } from '@/components/seo/FAQBlock';
 import { InternalLinksBlock } from '@/components/seo/InternalLinksBlock';
-import { AffiliateCard } from '@/components/monetization/AffiliateCard';
 
 const intentToModeMap: Record<string, string> = {
     'differenz': 'difference',
@@ -45,21 +44,6 @@ export default async function ProgrammaticPage({
 
             <div className="w-full max-w-4xl mx-auto rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl p-6 md:p-8 min-h-[400px] shadow-2xl mb-12">
                 <CalculatorCore initialMode={mode as any} />
-            </div>
-
-            <div className="max-w-4xl mx-auto mb-16 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <AffiliateCard
-                    title="Fristen niemals verpassen"
-                    description="Lassen Sie sich rechtzeitig an alle Termine erinnern. Kostenlose Kalender."
-                    url="https://affiliate/calendar"
-                    ctaText="App herunterladen"
-                />
-                <AffiliateCard
-                    title="Projektplanung leicht gemacht"
-                    description="Das Tool für Teams, die ihre Meilensteine und Sprints tracken wollen."
-                    url="https://affiliate/management"
-                    ctaText="Kostenlos testen"
-                />
             </div>
 
             <div className="max-w-4xl mx-auto space-y-12">

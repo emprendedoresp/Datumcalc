@@ -1,6 +1,5 @@
 import { CalculatorCore } from '@/components/calculator/CalculatorCore';
 import { getTranslations } from 'next-intl/server';
-import { AffiliateCard } from '@/components/monetization/AffiliateCard';
 import { NewsletterSignup } from '@/components/monetization/NewsletterSignup';
 
 export default async function Home() {
@@ -19,21 +18,6 @@ export default async function Home() {
 
             <div className="w-full max-w-4xl mx-auto rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl p-6 md:p-8 min-h-[400px] shadow-2xl mb-12">
                 <CalculatorCore />
-            </div>
-
-            <div className="max-w-4xl mx-auto mb-16 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <AffiliateCard
-                    title="Spare Zeit mit Notion"
-                    description="Verwalte deine Fristen und Kalender noch effizienter mit dem ultimativen Workspace-Tipp."
-                    url="https://affiliate/notion"
-                    ctaText="Jetzt ausprobieren"
-                />
-                <AffiliateCard
-                    title="Rechtssichere Verträge"
-                    description="Nutze Vorlagen, die immer das richtige Fristdatum beinhalten. Ohne Anwalt."
-                    url="https://affiliate/legal"
-                    ctaText="Zur Bibliothek"
-                />
             </div>
 
             <div className="max-w-4xl mx-auto">
