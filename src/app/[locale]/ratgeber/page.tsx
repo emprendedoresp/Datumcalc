@@ -1,30 +1,58 @@
 import Link from 'next/link';
-import { articles } from '@/lib/articles';
 
-export default function RatgeberIndex() {
+export const metadata = {
+    title: 'Ratgeber Datumsberechnung - Alle Themen & Guides',
+    description: 'Vertiefende Guides und Erklärungen rund um Datumsberechnung, Fristen, Werktage und Schaltjahre.'
+};
+
+export default async function RatgeberIndexPage({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale } = await params;
+    
+    // Correct links based on Authority Articles strategy pointing to existing @/lib/articles
+    const articles = [
+        { slug: 'arbeitstage-berechnen', title: 'Wie berechnet man Arbeitstage und Werktage?' },
+        { slug: 'schaltjahre-erklaert', title: 'Schaltjahre einfach erklärt: Warum es den 29. Februar gibt' },
+        { slug: 'wochen-im-jahr', title: 'Wie viele Wochen hat ein Jahr?' }
+    ];
+
     return (
-        <main className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div className="mb-12 space-y-4">
-                <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">Ratgeber & Artikel</h1>
-                <p className="text-lg text-white/60">
-                    Wissenswertes über Kalender, Schaltjahre und die exakte Berechnung von Arbeitstagen.
+        <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div className="text-center mb-16 space-y-4">
+                <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
+                    Ratgeber & Guides
+                </h1>
+                <p className="text-lg text-white/60 max-w-2xl mx-auto">
+                    Bauen Sie Fachwissen rund um Zeit, Fristen und Kalendersysteme auf.
                 </p>
             </div>
 
-            <div className="grid gap-8">
-                {articles.map(article => (
-                    <Link href={`/de/ratgeber/${article.slug}`} key={article.slug} className="block group">
-                        <article className="bg-[#1a1a1a] border border-white/5 hover:border-neon/50 rounded-2xl p-6 md:p-8 transition-all shadow-xl hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(255,0,85,0.1)]">
-                            <div className="flex justify-between items-center mb-4">
-                                <span className="text-sm font-semibold bg-white/5 text-neon-blue px-3 py-1 rounded-full">{article.readTime} Lesezeit</span>
-                                <span className="text-sm text-white/40">{article.publishedAt}</span>
-                            </div>
-                            <h2 className="text-2xl font-bold mb-3 group-hover:text-neon transition-colors">{article.title}</h2>
-                            <p className="text-white/60 leading-relaxed text-lg">{article.description}</p>
-                        </article>
-                    </Link>
+            <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+                {articles.map((article) => (
+                    <article key={article.slug} className="bg-white/5 border border-white/10 p-6 rounded-[2rem] hover:border-neon/50 transition-colors group">
+                        <Link href={`/${locale}/ratgeber/${article.slug}`} className="block">
+                            <h2 className="text-xl font-bold mb-4 group-hover:text-neon transition-colors">
+                                {article.title}
+                            </h2>
+                            <p className="text-white/60 mb-6">
+                                Lesen Sie unseren ausführlichen Guide zu diesem Thema und verstehen Sie die kalendarischen Zusammenhänge.
+                            </p>
+                            <span className="text-neon-blue font-semibold flex items-center gap-2">
+                                Artikel lesen
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </span>
+                        </Link>
+                    </article>
                 ))}
             </div>
         </main>
     );
+}
+
+export function generateStaticParams() {
+    return [
+        { locale: 'de' },
+        { locale: 'en' }
+    ];
 }

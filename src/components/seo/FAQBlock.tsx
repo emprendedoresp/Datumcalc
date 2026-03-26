@@ -1,16 +1,9 @@
-import Head from 'next/head';
+import { generateDynamicFAQs } from '@/lib/seo/contentEngine';
 
 export function FAQBlock({ intent, slug }: { intent: string; slug: string }) {
-    const faqs = [
-        {
-            question: `Wie genau funktioniert der Rechner für ${intent} ${slug.replace(/-/g, ' ')}?`,
-            answer: `Der Rechner analysiert die Eingabedaten millisekundengenau unter Berücksichtigung von Zeitzonen, Schaltjahren und standardisierten Tageslängen.`
-        },
-        {
-            question: `Ist die Berechnung kostenlos?`,
-            answer: `Ja, unser Rechner ist zu 100% kostenlos nutzbar, ohne Anmeldung oder versteckte Kosten.`
-        }
-    ];
+    const match = slug.match(/^(\d+)-/);
+    const numValue = match ? parseInt(match[1]) : undefined;
+    const faqs = generateDynamicFAQs(intent, slug, numValue);
 
     const jsonLd = {
         "@context": "https://schema.org",
@@ -26,8 +19,8 @@ export function FAQBlock({ intent, slug }: { intent: string; slug: string }) {
     };
 
     return (
-        <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
-            <h2 className="text-2xl font-bold mb-6">Häufig gestellte Fragen (FAQ)</h2>
+        <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 mb-12">
+            <h2 className="text-2xl font-bold mb-8 text-white">Häufig gestellte Fragen (FAQ)</h2>
 
             {/* Script for JSON-LD is manually injected safely */}
             <script
@@ -37,9 +30,9 @@ export function FAQBlock({ intent, slug }: { intent: string; slug: string }) {
 
             <div className="space-y-6">
                 {faqs.map((faq, index) => (
-                    <div key={index} className="space-y-2">
+                    <div key={index} className="space-y-2 pb-6 border-b border-white/5 last:border-0 last:pb-0">
                         <h3 className="text-lg font-semibold text-neon-blue">{faq.question}</h3>
-                        <p className="text-white/70">{faq.answer}</p>
+                        <p className="text-white/70 leading-relaxed">{faq.answer}</p>
                     </div>
                 ))}
             </div>
