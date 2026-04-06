@@ -9,8 +9,10 @@ export function Footer() {
                 <div className="flex flex-col md:flex-row justify-between items-center w-full gap-6">
                     <p className="order-2 md:order-1">© {new Date().getFullYear()} Datumsrechner. Alle Rechte vorbehalten.</p>
                     
-                    <div className="flex gap-6 order-1 md:order-2">
+                    <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 order-1 md:order-2">
+                        <Link href="/ueber-uns" className="hover:text-white transition-colors">Über uns</Link>
                         <Link href="/datenschutz" className="hover:text-white transition-colors">Datenschutz</Link>
+                        <Link href="/agb" className="hover:text-white transition-colors">AGB</Link>
                         <Link href="/impressum" className="hover:text-white transition-colors">Impressum</Link>
                     </div>
                 </div>

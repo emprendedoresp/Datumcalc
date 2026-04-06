@@ -13,6 +13,10 @@ export function getCoreSitemapUrls() {
         { url: `${BASE_URL}`, lastModified: new Date(), changeFrequency: 'daily', priority: 1.0 },
         { url: `${BASE_URL}/en`, lastModified: new Date(), changeFrequency: 'daily', priority: 1.0 },
         { url: `${BASE_URL}/ratgeber`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+        { url: `${BASE_URL}/ueber-uns`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
+        { url: `${BASE_URL}/datenschutz`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.3 },
+        { url: `${BASE_URL}/impressum`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.3 },
+        { url: `${BASE_URL}/agb`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.3 },
     ];
 }
 

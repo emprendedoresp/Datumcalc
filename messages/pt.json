@@ -7,6 +7,12 @@
             "fr": "Français",
             "it": "Italiano",
             "pt": "Português"
+        },
+        "titles": {
+            "imprint": "Aviso Legal",
+            "privacy": "Privacidade",
+            "terms": "Termos",
+            "about": "Sobre Nós"
         }
     },
     "Header": {
