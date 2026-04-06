@@ -1,4 +1,14 @@
 {
+    "Common": {
+        "languages": {
+            "de": "Deutsch",
+            "en": "English",
+            "es": "Español",
+            "fr": "Français",
+            "it": "Italiano",
+            "pt": "Português"
+        }
+    },
     "Header": {
         "title": "Calcolatore di Date"
     },
