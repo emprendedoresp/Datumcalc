@@ -1,9 +1,7 @@
 import { CalculatorCore } from '@/components/calculator/CalculatorCore';
 import { getTranslations } from 'next-intl/server';
-import { NewsletterSignup } from '@/components/monetization/NewsletterSignup';
 import { SmartInputBar } from '@/components/SmartInputBar';
 import { HomepageSEO } from '@/components/seo/HomepageSEO';
-
 export default async function Home() {
     const t = await getTranslations('Header');
 
@@ -35,11 +33,6 @@ export default async function Home() {
 
             {/* Semantic SEO & Content Blocks */}
             <HomepageSEO />
-
-            {/* Monetization / CTA */}
-            <aside aria-label="Newsletter Anmeldung" className="max-w-4xl mx-auto mt-24 mb-16">
-                <NewsletterSignup />
-            </aside>
         </main>
     );
 }
