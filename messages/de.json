@@ -16,7 +16,12 @@
         }
     },
     "Header": {
-        "title": "Datumsrechner"
+        "title": "Datumsrechner",
+        "Nav": {
+            "differenz": "Differenz",
+            "addieren": "Addieren",
+            "ratgeber": "Ratgeber"
+        }
     },
     "Modes": {
         "dateDifference": "Datumsdifferenz",

@@ -171,51 +171,65 @@ export default async function ProgrammaticPage({
     };
 
     return (
-        <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <article className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 space-y-16">
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
 
-            {/* 1. Dynamic Engaging Hero Result */}
-            {instantResult ? (
-                <div className="text-center mb-8 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                    <p className="text-2xl md:text-3xl font-medium text-white/50 tracking-wide uppercase">
-                        {instantResult.headline}
-                    </p>
-                    <h1 className="text-5xl sm:text-7xl md:text-8xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-neon to-neon-blue drop-shadow-[0_0_40px_rgba(255,0,85,0.3)] py-4">
-                        {instantResult.highlight}
-                    </h1>
-                    <p className="text-lg text-white/40">
-                        {instantResult.subtext}
-                    </p>
+            {/* 1. Direct Answer (Above the Fold) & E-E-A-T */}
+            <header className="w-full text-center space-y-8 animate-slide-up-fade">
+                {instantResult ? (
+                    <>
+                        <p className="text-xl md:text-2xl font-bold text-white/50 tracking-[0.2em] uppercase">
+                            {instantResult.headline}
+                        </p>
+                        <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-white/30 drop-shadow-[0_0_20px_rgba(255,255,255,0.1)] py-4">
+                            {instantResult.highlight}
+                        </h1>
+                        <p className="text-xl text-white/70 font-medium">
+                            {instantResult.subtext}
+                        </p>
+                    </>
+                ) : (
+                    <>
+                        <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight capitalize">
+                            {intent} {slugStr.replace(/-/g, ' ')}
+                        </h1>
+                        <p className="text-xl text-white/60 max-w-2xl mx-auto">
+                            Exakte ISO-8601 konforme Berechnung für {slugStr.replace(/-/g, ' ')}.
+                        </p>
+                    </>
+                )}
+
+                {/* E-E-A-T Verified Badge */}
+                <div className="flex justify-center mt-6">
+                    <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 text-xs font-bold text-green-400 uppercase tracking-widest backdrop-blur-md">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        Mathematisch & Kalendarisch verifiziert
+                    </span>
                 </div>
-            ) : (
-                <div className="text-center mb-8 space-y-4">
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight capitalize">
-                        {intent} {slugStr.replace(/-/g, ' ')}
-                    </h1>
-                    <p className="text-lg text-white/60 max-w-2xl mx-auto">
-                        Nutze unseren Rechner für exakte Berechnungen zu {slugStr.replace(/-/g, ' ')}.
-                    </p>
-                </div>
-            )}
+            </header>
 
             {/* UX layer */}
-            <ConversionTools />
+            <section aria-label="Share and Convert" className="animate-slide-up-fade" style={{ animationDelay: '0.1s' }}>
+                <ConversionTools />
+            </section>
 
             {/* 2. Embedded Core Calculator */}
-            <div className="w-full max-w-4xl mx-auto rounded-[2rem] border border-white/10 bg-[#0a0a0a] backdrop-blur-2xl p-6 md:p-8 min-h-[400px] shadow-2xl mb-12">
+            <section aria-label="Interaktiver Rechner" className="w-full max-w-5xl mx-auto rounded-[2.5rem] border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-3xl p-6 md:p-10 shadow-[0_0_50px_rgba(0,0,0,0.5)] animate-slide-up-fade" style={{ animationDelay: '0.2s' }}>
                 <CalculatorCore initialMode={mode as any} />
-            </div>
+            </section>
 
             {/* 3. SEO Hub & Content Layout */}
-            <div className="max-w-4xl mx-auto space-y-8">
+            <section aria-label="Detaillierte Informationen" className="max-w-4xl mx-auto space-y-12 animate-slide-up-fade" style={{ animationDelay: '0.3s' }}>
                 <SEOContentBlock intent={intent} slug={slugStr} />
                 <InternalLinksBlock locale={locale} intent={intent} slug={slugStr} />
                 <FAQBlock intent={intent} slug={slugStr} />
-            </div>
+            </section>
 
             <TrustSignals />
-        </main>
+        </article>
     );
 }
 

@@ -16,7 +16,12 @@
         }
     },
     "Header": {
-        "title": "Date Calculator"
+        "title": "Date Calculator",
+        "Nav": {
+            "differenz": "Difference",
+            "addieren": "Add/Subtract",
+            "ratgeber": "Guides"
+        }
     },
     "Modes": {
         "dateDifference": "Date Difference",
