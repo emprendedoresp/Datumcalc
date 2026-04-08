@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import { Link, locales } from '@/i18n/routing';
+import { CANONICAL_QUERIES } from '@/lib/seo/queryModel';
 import { 
     Calculator, 
     BookOpen, 
@@ -10,7 +11,8 @@ import {
     CalendarClock,
     FileText,
     Info,
-    Mail
+    Mail,
+    Code2
 } from 'lucide-react';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -27,6 +29,20 @@ export default function SitemapPage() {
     const tCommon = useTranslations('Common');
     const tNav = useTranslations('Header.Nav');
 
+    // Categorize dynamic queries
+    const seoLinks = Object.entries(CANONICAL_QUERIES)
+        .filter(([_, def]) => def.isIndexable)
+        .map(([slug, def]) => {
+            const path = def.calcMode === 'add_subtract' ? 'addieren' : 'differenz';
+            // Humanize slug (e.g. 30-tage-ab-heute -> 30 Tage ab heute)
+            const label = slug.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            return {
+                href: `/${path}/${slug}`,
+                label,
+                calcMode: def.calcMode
+            };
+        });
+
     const sections = [
         {
             title: tNav('ariaLabel'),
@@ -37,6 +53,8 @@ export default function SitemapPage() {
                 { href: '/addieren', label: tNav('addieren'), desc: tNav('addierenDesc') },
                 { href: '/arbeitstage', label: tNav('arbeitstage'), desc: tNav('arbeitstageDesc') },
                 { href: '/alter', label: 'Alter berechnen', desc: 'Genaues Alter in Tagen, Monaten und Jahren' },
+                // Add top-tier dynamic links
+                ...seoLinks.filter(l => l.calcMode !== 'business_days').slice(0, 8)
             ]
         },
         {
@@ -116,8 +134,35 @@ export default function SitemapPage() {
                 ))}
             </div>
 
+            {/* Technical Sitemaps */}
+            <section className="mt-16 p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/5 overflow-hidden relative group">
+                <div className="absolute top-0 right-0 p-12 -mr-8 -mt-8 bg-neon/10 blur-[100px] rounded-full group-hover:bg-neon/20 transition-colors"></div>
+                <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                    <div className="space-y-2 text-center md:text-left">
+                        <h2 className="text-2xl font-bold text-white flex items-center gap-3 justify-center md:justify-start">
+                            <Code2 className="w-6 h-6 text-neon" />
+                            Technische Verzeichnisse (XML)
+                        </h2>
+                        <p className="text-white/40">Maschinenlesbare Indexe für Suchmaschinen-Crawler.</p>
+                    </div>
+                    <div className="flex flex-wrap justify-center gap-4">
+                        {['sitemap.xml', 'sitemap-core.xml', 'sitemap-seo.xml', 'sitemap-events.xml'].map(xml => (
+                            <a 
+                                key={xml}
+                                href={`/${xml}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-6 py-3 rounded-xl bg-white/5 border border-white/10 hover:border-neon/30 hover:bg-neon/5 text-sm font-medium text-white/60 hover:text-white transition-all"
+                            >
+                                {xml}
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {/* Language Section */}
-            <section className="mt-16 p-8 rounded-[2.5rem] bg-gradient-to-br from-white/[0.03] to-transparent border border-white/10 animate-slide-up-fade" style={{ animationDelay: '0.1s' }}>
+            <section className="mt-8 p-8 rounded-[2.5rem] bg-gradient-to-br from-white/[0.03] to-transparent border border-white/10 animate-slide-up-fade" style={{ animationDelay: '0.1s' }}>
                 <div className="flex flex-col md:flex-row items-center gap-8 justify-between">
                     <div className="space-y-2 text-center md:text-left">
                         <h2 className="text-2xl font-bold text-white flex items-center gap-3 justify-center md:justify-start">
