@@ -5,7 +5,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     const t = await getTranslations({ locale, namespace: 'Common.titles' });
     return {
         title: `${t('terms')} - Datumsrechner`,
-        description: `Allgemeine Geschäftsbedingungen und Nutzungsregeln für Datumsrechner.app.`
+        description: `Allgemeine Geschäftsbedingungen und Nutzungsregeln für datums-rechner.com.`
     };
 }
 
@@ -23,14 +23,14 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
                 <section>
                     <h2 className="text-2xl font-bold text-white mb-4">1. Geltungsbereich</h2>
                     <p className="text-white/70 leading-relaxed">
-                        Die folgenden Geschäftsbedingungen regeln die Nutzung der Online-Tools auf Datumsrechner.app. Mit dem Zugriff auf unsere Website erklären Sie sich mit diesen Bedingungen einverstanden.
+                        Die folgenden Geschäftsbedingungen regeln die Nutzung der Online-Tools auf datums-rechner.com. Mit dem Zugriff auf unsere Website erklären Sie sich mit diesen Bedingungen einverstanden.
                     </p>
                 </section>
 
                 <section>
                     <h2 className="text-2xl font-bold text-white mb-4">2. Dienstleistungsbeschreibung</h2>
                     <p className="text-white/70 leading-relaxed">
-                        Datumsrechner.app stellt kostenlose Rechen-Tools zur Verfügung, um Datumsdifferenzen, Zeitspannen und Arbeitstage zu berechnen. Die Ergebnisse dienen ausschließlich Informationszwecken.
+                        datums-rechner.com stellt kostenlose Rechen-Tools zur Verfügung, um Datumsdifferenzen, Zeitspannen und Arbeitstage zu berechnen. Die Ergebnisse dienen ausschließlich Informationszwecken.
                     </p>
                 </section>
 

@@ -113,7 +113,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
             title: `${match[1]} ${match[2]} ab heute → Genaues Datum ✓`,
             description: `Kostenloser Rechner: Erfahren Sie sofort das exakte Datum in ${match[1]} ${match[2]} inklusive Berücksichtigung von Schaltjahren und Wochenenden.`,
             alternates: {
-                canonical: `https://datumsrechner.app${urlLocale}/${intent}/${slugStr}`
+                canonical: `https://datums-rechner.com${urlLocale}/${intent}/${slugStr}`
             }
         };
     }
@@ -155,8 +155,8 @@ export default async function ProgrammaticPage({
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
-            { "@type": "ListItem", "position": 1, "name": "Startseite", "item": `https://datumsrechner.app/${locale}` },
-            { "@type": "ListItem", "position": 2, "name": intent === 'addieren' ? 'Datumsrechner' : 'Tage Zählen', "item": `https://datumsrechner.app/${locale}/${intent}` },
+            { "@type": "ListItem", "position": 1, "name": "Startseite", "item": `https://datums-rechner.com/${locale}` },
+            { "@type": "ListItem", "position": 2, "name": intent === 'addieren' ? 'Datumsrechner' : 'Tage Zählen', "item": `https://datums-rechner.com/${locale}/${intent}` },
             { "@type": "ListItem", "position": 3, "name": slugStr.replace(/-/g, ' ') }
         ]
     };

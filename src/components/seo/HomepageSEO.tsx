@@ -1,7 +1,7 @@
 import { Link } from '@/i18n/routing';
 import { CheckCircle2, CalendarCheck2, Clock4, Users, ShieldCheck } from 'lucide-react';
 
-const siteUrl = 'https://www.datumsrechner.de';
+const siteUrl = 'https://datums-rechner.com';
 const dateModified = new Date().toISOString().split('T')[0];
 
 const homepageFAQs = [

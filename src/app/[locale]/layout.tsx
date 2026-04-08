@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 import { Inter } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, getLocale } from 'next-intl/server';
+import { getMessages } from 'next-intl/server';
 import "../globals.css";
 
 const inter = Inter({
@@ -12,12 +12,75 @@ const inter = Inter({
     display: "swap",
 });
 
-export const metadata: Metadata = {
-    title: "Datumsrechner | Date Calculator",
-    description: "Advanced Date and Time Calculator – free, precise, and ISO 8601 compliant.",
+const siteUrl = "https://datums-rechner.com";
+
+type Props = {
+    params: Promise<{ locale: string }>;
 };
 
-const siteUrl = "https://www.datumsrechner.de";
+export async function generateMetadata(
+    { params }: Props,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    const { locale } = await params;
+
+    // Supported locales
+    const locales = ['de', 'en', 'es', 'fr', 'it', 'pt'];
+    
+    // Build language alternates
+    const languages: Record<string, string> = {};
+    locales.forEach(loc => {
+        languages[loc] = `${siteUrl}/${loc}`;
+    });
+    // Add x-default
+    languages['x-default'] = `${siteUrl}/de`;
+
+    return {
+        title: locale === 'de' ? "Datumsrechner | Exakte Zeitberechnung online" : "Date Calculator | Exact time calculation online",
+        description: locale === 'de' 
+            ? "Berechnen Sie exakte Datumsdifferenzen, addieren Sie Tage oder ermitteln Sie Arbeitstage. Kostenlos, präzise und ISO 8601 konform."
+            : "Calculate exact date differences, add days or determine business days. Free, precise and ISO 8601 compliant.",
+        metadataBase: new URL(siteUrl),
+        alternates: {
+            canonical: `./`,
+            languages: languages,
+        },
+        openGraph: {
+            type: 'website',
+            locale: locale,
+            url: siteUrl,
+            siteName: 'Datumsrechner',
+            images: [
+                {
+                    url: '/og-image.png',
+                    width: 1200,
+                    height: 630,
+                    alt: 'Datumsrechner Preview',
+                },
+            ],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: 'Datumsrechner',
+            description: 'Advanced Date and Time Calculator',
+            images: ['/og-image.png'],
+        },
+        verification: {
+            google: '7KUnH1MRuX53v_0Kzyg8GT_rlLgg-VJLs6w-5n6Byy8',
+        },
+        robots: {
+            index: true,
+            follow: true,
+            googleBot: {
+                index: true,
+                follow: true,
+                'max-video-preview': -1,
+                'max-image-preview': 'large',
+                'max-snippet': -1,
+            },
+        },
+    };
+}
 
 export default async function LocaleLayout({
     children,

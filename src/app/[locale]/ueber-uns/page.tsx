@@ -6,7 +6,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     const t = await getTranslations({ locale, namespace: 'Common.titles' });
     return {
         title: `${t('about')} - Datumsrechner`,
-        description: `Erfahren Sie mehr über die Mission und die Vision von Datumsrechner.app – präzise Zeitberechnungen für alle.`
+        description: `Erfahren Sie mehr über die Mission und die Vision von datums-rechner.com – präzise Zeitberechnungen für alle.`
     };
 }
 
@@ -38,7 +38,7 @@ export default async function AboutUsPage({ params }: { params: Promise<{ locale
                             Wir haben unsere Core-Engine so entwickelt, dass sie alle Eventualitäten des gregorianischen Kalenders abdeckt. Schaltjahre, unregelmäßige Monatslängen und Arbeitstage-Konfigurationen werden sekundenschnell ohne Rundungsfehler verarbeitet.
                         </p>
                         <p className="text-white/60">
-                            Hinter Datumsrechner.app steht ein Team aus Entwicklern und Daten-Enthusiasten, die überzeugt sind, dass einfache Web-Tools sowohl funktional als auch ästhetisch ansprechend sein können.
+                            Hinter datums-rechner.com steht ein Team aus Entwicklern und Daten-Enthusiasten, die überzeugt sind, dass einfache Web-Tools sowohl funktional als auch ästhetisch ansprechend sein können.
                         </p>
                     </div>
                     <div className="bg-gradient-to-br from-neon/10 to-neon-blue/10 border border-white/10 p-8 rounded-[2.5rem] flex flex-col justify-center text-center">

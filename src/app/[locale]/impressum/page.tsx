@@ -34,7 +34,7 @@ export default async function ImprintPage({ params }: { params: Promise<{ locale
                 <section>
                     <h2 className="text-2xl font-bold text-white mb-4">Kontakt</h2>
                     <p className="text-white/70 leading-relaxed">
-                        E-Mail: hello@datumsrechner.app<br />
+                        E-Mail: hello@datums-rechner.com<br />
                         Telefon: +49 (0) 123 456789 (optional)
                     </p>
                 </section>

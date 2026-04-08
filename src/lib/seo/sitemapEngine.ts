@@ -6,7 +6,7 @@ import { CANONICAL_QUERIES } from './queryModel';
  */
 
 // Define standard buckets to generate dynamic sitemaps
-export const BASE_URL = 'https://datumsrechner.app'; // Replace with actual domain
+export const BASE_URL = 'https://datums-rechner.com'; 
 
 export function getCoreSitemapUrls() {
     return [

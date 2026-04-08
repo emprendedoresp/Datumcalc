@@ -60,7 +60,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
                         Max Mustermann<br />
                         Musterstraße 123<br />
                         12345 Musterstadt<br />
-                        hello@datumsrechner.app
+                        hello@datums-rechner.com
                     </p>
                 </section>
             </div>
