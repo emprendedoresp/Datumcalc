@@ -16,7 +16,25 @@
         }
     },
     "Header": {
-        "title": "Calculadora de Fechas"
+        "title": "Calculadora de Fechas",
+        "logoTagline": "Calculadora de fechas gratuita en línea",
+        "skipToContent": "Saltar al contenido",
+        "Nav": {
+            "ariaLabel": "Navegación principal",
+            "differenz": "Diferencia",
+            "differenzDesc": "Calcular días entre dos fechas",
+            "addieren": "Sumar/Restar",
+            "addierenDesc": "Agregar o restar días a una fecha",
+            "arbeitstage": "Días Hábiles",
+            "arbeitstageDesc": "Calcular días hábiles netos entre fechas",
+            "ratgeber": "Guías",
+            "ratgeberDesc": "Artículos sobre fechas y tiempo",
+            "cta": "Calcular ahora",
+            "languageLabel": "Seleccionar idioma",
+            "openMenu": "Abrir menú",
+            "closeMenu": "Cerrar menú",
+            "mobileNavLabel": "Navegación móvil"
+        }
     },
     "Modes": {
         "dateDifference": "Diferencia de Fechas",

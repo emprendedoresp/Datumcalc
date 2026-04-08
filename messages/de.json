@@ -17,10 +17,23 @@
     },
     "Header": {
         "title": "Datumsrechner",
+        "logoTagline": "Kostenloser Datumsrechner online",
+        "skipToContent": "Zum Inhalt springen",
         "Nav": {
+            "ariaLabel": "Hauptnavigation",
             "differenz": "Differenz",
+            "differenzDesc": "Tage zwischen zwei Daten berechnen",
             "addieren": "Addieren",
-            "ratgeber": "Ratgeber"
+            "addierenDesc": "Tage zu einem Datum hinzufügen oder subtrahieren",
+            "arbeitstage": "Arbeitstage",
+            "arbeitstageDesc": "Netto-Arbeitstage zwischen Daten berechnen",
+            "ratgeber": "Ratgeber",
+            "ratgeberDesc": "Wissensartikel rund um Datum und Zeit",
+            "cta": "Jetzt berechnen",
+            "languageLabel": "Sprache wählen",
+            "openMenu": "Menü öffnen",
+            "closeMenu": "Menü schließen",
+            "mobileNavLabel": "Mobile Navigation"
         }
     },
     "Modes": {

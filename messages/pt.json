@@ -16,7 +16,25 @@
         }
     },
     "Header": {
-        "title": "Calculadora de Datas"
+        "title": "Calculadora de Datas",
+        "logoTagline": "Calculadora de datas gratuita online",
+        "skipToContent": "Pular para o conteúdo",
+        "Nav": {
+            "ariaLabel": "Navegação principal",
+            "differenz": "Diferença",
+            "differenzDesc": "Calcular dias entre duas datas",
+            "addieren": "Somar/Subtrair",
+            "addierenDesc": "Adicionar ou subtrair dias de uma data",
+            "arbeitstage": "Dias Úteis",
+            "arbeitstageDesc": "Calcular dias úteis entre datas",
+            "ratgeber": "Guias",
+            "ratgeberDesc": "Artigos sobre datas e tempo",
+            "cta": "Calcular agora",
+            "languageLabel": "Selecionar idioma",
+            "openMenu": "Abrir menu",
+            "closeMenu": "Fechar menu",
+            "mobileNavLabel": "Navegação móvel"
+        }
     },
     "Modes": {
         "dateDifference": "Diferença de Datas",

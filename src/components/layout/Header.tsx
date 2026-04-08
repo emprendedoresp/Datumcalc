@@ -1,115 +1,321 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, usePathname } from '@/i18n/routing';
-import { CalendarDays, Menu, X, PlusSquare, SplitSquareHorizontal, BookOpen, ArrowRight } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import {
+    CalendarDays,
+    Menu,
+    X,
+    SplitSquareHorizontal,
+    PlusSquare,
+    BookOpen,
+    Briefcase,
+    ArrowRight,
+    Globe,
+    ChevronDown,
+} from 'lucide-react';
+import { useTranslations, useLocale } from 'next-intl';
+import { locales, useRouter } from '@/i18n/routing';
 
 export function Header() {
     const t = useTranslations('Header');
+    const tCommon = useTranslations('Common.languages');
+    const locale = useLocale();
+    const router = useRouter();
     const pathname = usePathname();
     const [isScrolled, setIsScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [langOpen, setLangOpen] = useState(false);
+    const langRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const handleScroll = () => setIsScrolled(window.scrollY > 20);
-        window.addEventListener('scroll', handleScroll);
+        const handleScroll = () => setIsScrolled(window.scrollY > 60);
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    // Close lang dropdown on outside click
+    useEffect(() => {
+        const handler = (e: MouseEvent) => {
+            if (langRef.current && !langRef.current.contains(e.target as Node)) {
+                setLangOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handler);
+        return () => document.removeEventListener('mousedown', handler);
+    }, []);
+
+    // Lock body scroll when mobile menu is open
+    useEffect(() => {
+        document.body.style.overflow = mobileMenuOpen ? 'hidden' : '';
+        return () => { document.body.style.overflow = ''; };
+    }, [mobileMenuOpen]);
+
     const navLinks = [
-        { href: '/differenz', label: t('Nav.differenz'), icon: SplitSquareHorizontal },
-        { href: '/addieren', label: t('Nav.addieren'), icon: PlusSquare },
-        { href: '/ratgeber', label: t('Nav.ratgeber'), icon: BookOpen },
+        { href: '/differenz', label: t('Nav.differenz'), icon: SplitSquareHorizontal, description: t('Nav.differenzDesc') },
+        { href: '/addieren',  label: t('Nav.addieren'),   icon: PlusSquare,             description: t('Nav.addierenDesc') },
+        { href: '/arbeitstage', label: t('Nav.arbeitstage'), icon: Briefcase,           description: t('Nav.arbeitstageDesc') },
+        { href: '/ratgeber',  label: t('Nav.ratgeber'),   icon: BookOpen,               description: t('Nav.ratgeberDesc') },
     ];
 
-    return (
-        <header className={`fixed top-0 z-50 w-full transition-all duration-300 ${isScrolled ? 'bg-[#030303]/80 backdrop-blur-2xl border-b border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.5)] py-3' : 'bg-transparent py-5'}`}>
-            <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between">
-                    
-                    {/* Logo */}
-                    <Link href="/" className="flex items-center gap-3 group relative z-50">
-                        <div className="bg-gradient-to-br from-neon to-neon-blue p-2.5 rounded-xl group-hover:shadow-[0_0_20px_rgba(255,0,85,0.4)] transition-all duration-300 group-hover:scale-105 border border-white/20">
-                            <CalendarDays className="w-5 h-5 text-white" />
-                        </div>
-                        <span className="font-black text-2xl tracking-tighter text-white">
-                            {t('title')}
-                        </span>
-                    </Link>
+    const handleLocaleChange = (newLocale: string) => {
+        router.replace(pathname, { locale: newLocale as 'de' | 'en' | 'es' | 'fr' | 'it' | 'pt' });
+        setLangOpen(false);
+        setMobileMenuOpen(false);
+    };
 
-                    {/* Desktop Navigation */}
-                    <nav className="hidden lg:flex items-center gap-2 bg-white/5 px-2 py-1.5 rounded-full border border-white/10 backdrop-blur-md shadow-inner" aria-label="Main Navigation">
+    return (
+        <>
+            {/* ── Skip-to-content link (SEO + A11y) ── */}
+            <a
+                href="#main-content"
+                id="skip-nav"
+                className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:px-5 focus:py-2.5 focus:rounded-xl focus:bg-neon focus:text-white focus:font-bold focus:text-sm focus:shadow-[0_0_20px_rgba(255,0,85,0.5)] focus:outline-none"
+            >
+                {t('skipToContent')}
+            </a>
+
+            {/* ── Main Header ── */}
+            <header
+                role="banner"
+                className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 ease-in-out ${
+                    isScrolled
+                        ? 'bg-[#030303]/90 backdrop-blur-2xl border-b border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.6)] py-3'
+                        : 'bg-transparent py-5'
+                }`}
+            >
+                <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div className="flex items-center justify-between gap-4">
+
+                        {/* ── Logo / Brand Entity ── */}
+                        <Link
+                            href="/"
+                            title={t('title')}
+                            aria-label={`${t('title')} – ${t('logoTagline')}`}
+                            className="flex items-center gap-3 group relative z-50 shrink-0"
+                            itemProp="url"
+                        >
+                            <span
+                                aria-hidden="true"
+                                className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-neon to-neon-blue border border-white/20 shadow-[0_0_16px_rgba(0,210,255,0.25)] group-hover:shadow-[0_0_24px_rgba(255,0,85,0.45)] group-hover:scale-105 transition-all duration-300"
+                            >
+                                <CalendarDays className="w-5 h-5 text-white" />
+                            </span>
+                            <strong
+                                className="font-black text-xl sm:text-2xl tracking-tighter text-white leading-none select-none"
+                                itemProp="name"
+                            >
+                                {t('title')}
+                            </strong>
+                        </Link>
+
+                        {/* ── Desktop Navigation ── */}
+                        <nav
+                            aria-label={t('Nav.ariaLabel')}
+                            className="hidden lg:flex lg:flex-row items-center gap-1 bg-white/[0.04] px-2 py-1.5 rounded-2xl border border-white/[0.08] backdrop-blur-md shadow-inner"
+                            itemScope
+                            itemType="https://schema.org/SiteNavigationElement"
+                        >
+                            {navLinks.map((link) => {
+                                const isActive = pathname === link.href || pathname.startsWith(link.href + '/');
+                                return (
+                                    <Link
+                                        key={link.href}
+                                        href={link.href}
+                                        aria-current={isActive ? 'page' : undefined}
+                                        title={link.description}
+                                        itemProp="url"
+                                        className={`relative flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-xl transition-all duration-200 group overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-neon-blue/70 ${
+                                            isActive
+                                                ? 'text-white bg-white/10 shadow-sm'
+                                                : 'text-white/55 hover:text-white hover:bg-white/[0.06]'
+                                        }`}
+                                    >
+                                        <link.icon
+                                            className={`w-4 h-4 shrink-0 transition-all ${
+                                                isActive ? 'text-neon-blue' : 'opacity-50 group-hover:opacity-100 group-hover:text-neon'
+                                            }`}
+                                            aria-hidden="true"
+                                        />
+                                        <span itemProp="name">{link.label}</span>
+                                        {isActive && (
+                                            <span
+                                                aria-hidden="true"
+                                                className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-6 h-[2px] bg-neon-blue rounded-t-full shadow-[0_-2px_8px_rgba(0,210,255,0.7)]"
+                                            />
+                                        )}
+                                    </Link>
+                                );
+                            })}
+                        </nav>
+
+                        {/* ── Desktop Right Controls ── */}
+                        <div className="hidden lg:flex items-center gap-3 shrink-0">
+
+                            {/* Language Dropdown */}
+                            <div ref={langRef} className="relative">
+                                <button
+                                    id="lang-toggle"
+                                    aria-haspopup="listbox"
+                                    aria-expanded={langOpen}
+                                    aria-label={t('Nav.languageLabel')}
+                                    onClick={() => setLangOpen(!langOpen)}
+                                    className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-white/50 hover:text-white px-3 py-2 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-neon-blue/70"
+                                >
+                                    <Globe className="w-3.5 h-3.5" aria-hidden="true" />
+                                    {locale.toUpperCase()}
+                                    <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${langOpen ? 'rotate-180' : ''}`} aria-hidden="true" />
+                                </button>
+                                {langOpen && (
+                                    <div
+                                        role="listbox"
+                                        aria-labelledby="lang-toggle"
+                                        className="absolute right-0 top-full mt-2 min-w-[9rem] bg-[#111]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_16px_40px_rgba(0,0,0,0.6)] overflow-hidden animate-slide-up-fade z-50 py-1.5"
+                                    >
+                                        {locales.map((loc) => (
+                                            <button
+                                                key={loc}
+                                                role="option"
+                                                aria-selected={locale === loc}
+                                                onClick={() => handleLocaleChange(loc)}
+                                                className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+                                                    locale === loc
+                                                        ? 'text-neon-blue bg-neon-blue/10 font-bold'
+                                                        : 'text-white/60 hover:text-white hover:bg-white/[0.05] font-medium'
+                                                }`}
+                                            >
+                                                {tCommon(loc)}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* CTA */}
+                            <Link
+                                href="/addieren"
+                                className="group flex items-center gap-2 bg-white text-black font-bold text-sm px-5 py-2.5 rounded-xl hover:scale-[1.03] hover:bg-white/90 transition-all duration-200 shadow-[0_2px_12px_rgba(255,255,255,0.15)] hover:shadow-[0_4px_20px_rgba(255,255,255,0.25)] outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+                            >
+                                {t('Nav.cta')}
+                                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
+                            </Link>
+                        </div>
+
+                        {/* ── Mobile Menu Toggle ── */}
+                        <button
+                            aria-controls="mobile-nav"
+                            aria-expanded={mobileMenuOpen}
+                            aria-label={mobileMenuOpen ? t('Nav.closeMenu') : t('Nav.openMenu')}
+                            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                            className="lg:hidden relative z-50 p-2.5 rounded-xl text-white/70 hover:text-white bg-white/[0.04] border border-white/10 hover:border-white/20 hover:bg-white/[0.08] transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-neon-blue/70"
+                        >
+                            <span aria-hidden="true">
+                                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            {/* ── Mobile Drawer ── */}
+            <div
+                id="mobile-nav"
+                role="dialog"
+                aria-modal="true"
+                aria-label={t('Nav.mobileNavLabel')}
+                className={`fixed inset-0 z-40 lg:hidden flex flex-col transition-all duration-500 ease-in-out ${
+                    mobileMenuOpen
+                        ? 'opacity-100 pointer-events-auto'
+                        : 'opacity-0 pointer-events-none'
+                }`}
+            >
+                {/* Backdrop */}
+                <div
+                    className="absolute inset-0 bg-[#030303]/97 backdrop-blur-3xl"
+                    aria-hidden="true"
+                    onClick={() => setMobileMenuOpen(false)}
+                />
+
+                {/* Drawer content */}
+                <div
+                    className={`relative flex flex-col h-full px-6 pt-24 pb-10 transition-transform duration-500 ease-in-out ${
+                        mobileMenuOpen ? 'translate-y-0' : '-translate-y-4'
+                    }`}
+                >
+                    {/* Brand inside drawer */}
+                    <div className="flex items-center gap-3 mb-10 opacity-40">
+                        <CalendarDays className="w-5 h-5 text-neon-blue" aria-hidden="true" />
+                        <span className="font-black text-lg tracking-tighter text-white">{t('title')}</span>
+                    </div>
+
+                    <nav
+                        aria-label={t('Nav.mobileNavLabel')}
+                        itemScope
+                        itemType="https://schema.org/SiteNavigationElement"
+                        className="flex flex-col gap-2 flex-1"
+                    >
                         {navLinks.map((link) => {
-                            const isActive = pathname.startsWith(link.href);
+                            const isActive = pathname === link.href || pathname.startsWith(link.href + '/');
                             return (
-                                <Link 
-                                    key={link.href} 
-                                    href={link.href} 
-                                    className={`relative flex items-center gap-2 text-sm font-semibold px-5 py-2 rounded-full transition-all group overflow-hidden ${
-                                        isActive ? 'text-white bg-white/10' : 'text-white/60 hover:text-white hover:bg-white/5'
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    itemProp="url"
+                                    aria-current={isActive ? 'page' : undefined}
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className={`flex items-center gap-4 px-6 py-5 rounded-2xl text-xl font-bold transition-all duration-200 ${
+                                        isActive
+                                            ? 'text-white bg-white/10 border border-white/10'
+                                            : 'text-white/50 hover:text-white hover:bg-white/[0.05]'
                                     }`}
                                 >
-                                    <link.icon className={`w-4 h-4 transition-all ${isActive ? 'text-neon-blue' : 'opacity-50 group-hover:opacity-100 group-hover:text-neon'}`} />
-                                    {link.label}
+                                    <link.icon
+                                        className={`w-6 h-6 shrink-0 ${isActive ? 'text-neon-blue' : 'text-white/30'}`}
+                                        aria-hidden="true"
+                                    />
+                                    <span itemProp="name">{link.label}</span>
                                     {isActive && (
-                                        <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-[2px] bg-neon-blue rounded-t-full shadow-[0_-2px_10px_rgba(0,210,255,0.8)]" />
+                                        <span aria-hidden="true" className="ml-auto w-2 h-2 rounded-full bg-neon-blue animate-pulse shrink-0" />
                                     )}
                                 </Link>
                             );
                         })}
                     </nav>
 
-                    {/* Desktop CTA */}
-                    <div className="hidden lg:flex items-center relative z-50">
-                        <Link href="/addieren" className="group flex items-center gap-2 bg-white text-black font-bold px-6 py-2.5 rounded-full hover:scale-105 transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-                            Jetzt Berechnen
-                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                    </div>
-
-                    {/* Mobile Menu Toggle */}
-                    <button 
-                        className="lg:hidden p-2 text-white/70 hover:text-white relative z-50 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md"
-                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        aria-expanded={mobileMenuOpen}
-                        aria-label="Toggle navigation menu"
+                    {/* Mobile CTA */}
+                    <Link
+                        href="/addieren"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="flex items-center justify-center gap-2 bg-gradient-to-r from-neon to-neon-blue text-white font-bold text-base px-8 py-4 rounded-2xl shadow-[0_4px_24px_rgba(255,0,85,0.3)] hover:shadow-[0_6px_32px_rgba(255,0,85,0.5)] hover:scale-[1.02] transition-all duration-200 mb-6 mt-4"
                     >
-                        {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-                    </button>
+                        {t('Nav.cta')}
+                        <ArrowRight className="w-5 h-5" aria-hidden="true" />
+                    </Link>
+
+                    {/* Mobile Language Switcher */}
+                    <div className="border-t border-white/5 pt-6">
+                        <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/25 mb-4 px-2">
+                            {t('Nav.languageLabel')}
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                            {locales.map((loc) => (
+                                <button
+                                    key={loc}
+                                    onClick={() => handleLocaleChange(loc)}
+                                    aria-pressed={locale === loc}
+                                    className={`px-4 py-2 rounded-xl text-sm font-bold uppercase tracking-wider transition-all duration-200 ${
+                                        locale === loc
+                                            ? 'bg-neon-blue/15 text-neon-blue border border-neon-blue/30'
+                                            : 'text-white/30 hover:text-white/70 border border-white/5 hover:border-white/15'
+                                    }`}
+                                >
+                                    {loc}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            {/* Mobile Drawer */}
-            <div className={`fixed inset-0 bg-[#030303]/95 backdrop-blur-3xl z-40 transition-transform duration-500 ease-in-out lg:hidden ${mobileMenuOpen ? 'translate-y-0' : '-translate-y-full'}`}>
-                <nav className="flex flex-col items-center justify-center h-full gap-8 px-6" aria-label="Mobile Navigation">
-                    {navLinks.map((link) => {
-                        const isActive = pathname.startsWith(link.href);
-                        return (
-                            <Link 
-                                key={link.href} 
-                                href={link.href} 
-                                onClick={() => setMobileMenuOpen(false)}
-                                className={`flex items-center gap-4 text-3xl font-black transition-colors ${
-                                    isActive ? 'text-white' : 'text-white/50 hover:text-white'
-                                }`}
-                            >
-                                <link.icon className={`w-8 h-8 ${isActive ? 'text-neon-blue' : ''}`} />
-                                {link.label}
-                                {isActive && <span className="w-2 h-2 rounded-full bg-neon-blue ml-2 animate-pulse" />}
-                            </Link>
-                        );
-                    })}
-                    
-                    <Link 
-                        href="/addieren" 
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="mt-8 flex items-center gap-2 bg-gradient-to-r from-neon to-neon-blue text-white font-bold px-8 py-4 rounded-full"
-                    >
-                        Jetzt Berechnen <ArrowRight className="w-5 h-5" />
-                    </Link>
-                </nav>
-            </div>
-        </header>
+        </>
     );
 }

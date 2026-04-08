@@ -29,10 +29,38 @@ body {
   overflow-x: hidden;
 }
 
+/* ── Accessibility: Skip-to-content link ── */
+#skip-nav {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  z-index: 200;
+  padding: 0.625rem 1.25rem;
+  background: #ff0055;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.875rem;
+  border-radius: 0 0 0.75rem 0;
+  transition: top 0.15s ease;
+  text-decoration: none;
+}
+#skip-nav:focus {
+  top: 0;
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+
+/* ── Focus target for main content ── */
+#main-content:focus {
+  outline: none;
+}
+
 /* Base Semantic Tag Resets for SEO / Screen Readers */
-article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+/* NOTE: nav is intentionally excluded to allow Tailwind flex utilities to work on nav elements */
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, section, summary {
     display: block;
 }
+
 
 /* Premium micro-animations */
 @keyframes slide-up-fade {
@@ -50,4 +78,16 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
     backdrop-filter: blur(24px);
     border: 1px solid var(--color-glass-border);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }

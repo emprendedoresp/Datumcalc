@@ -2,15 +2,16 @@ import { CalculatorCore } from '@/components/calculator/CalculatorCore';
 import { getTranslations } from 'next-intl/server';
 import { SmartInputBar } from '@/components/SmartInputBar';
 import { HomepageSEO } from '@/components/seo/HomepageSEO';
+
 export default async function Home() {
     const t = await getTranslations('Header');
 
     return (
-        <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
-            {/* Semantic Header Block for Hero */}
+        <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+            {/* Semantic Hero Header */}
             <header className="text-center mb-16 space-y-6 animate-slide-up-fade">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-neon-blue mb-4">
-                    <span className="w-2 h-2 rounded-full bg-neon-blue animate-pulse"></span>
+                    <span className="w-2 h-2 rounded-full bg-neon-blue animate-pulse" aria-hidden="true"></span>
                     Exakte Datumsberechnung für Profis
                 </div>
                 <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight">
@@ -33,6 +34,6 @@ export default async function Home() {
 
             {/* Semantic SEO & Content Blocks */}
             <HomepageSEO />
-        </main>
+        </div>
     );
 }

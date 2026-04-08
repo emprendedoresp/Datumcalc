@@ -17,10 +17,23 @@
     },
     "Header": {
         "title": "Date Calculator",
+        "logoTagline": "Free online date calculator",
+        "skipToContent": "Skip to content",
         "Nav": {
+            "ariaLabel": "Main Navigation",
             "differenz": "Difference",
-            "addieren": "Add/Subtract",
-            "ratgeber": "Guides"
+            "differenzDesc": "Calculate days between two dates",
+            "addieren": "Add / Subtract",
+            "addierenDesc": "Add or subtract days from a date",
+            "arbeitstage": "Business Days",
+            "arbeitstageDesc": "Calculate net business days between dates",
+            "ratgeber": "Guides",
+            "ratgeberDesc": "Knowledge articles about dates and time",
+            "cta": "Calculate now",
+            "languageLabel": "Select language",
+            "openMenu": "Open menu",
+            "closeMenu": "Close menu",
+            "mobileNavLabel": "Mobile Navigation"
         }
     },
     "Modes": {
