@@ -45,6 +45,11 @@ export async function generateMetadata(
             canonical: `./`,
             languages: languages,
         },
+        icons: {
+            icon: '/logo.png',
+            shortcut: '/logo.png',
+            apple: '/logo.png',
+        },
         openGraph: {
             type: 'website',
             locale: locale,
@@ -132,9 +137,9 @@ export default async function LocaleLayout({
         "url": siteUrl,
         "logo": {
             "@type": "ImageObject",
-            "url": `${siteUrl}/og-image.png`,
-            "width": 1200,
-            "height": 630
+            "url": `${siteUrl}/logo.png`,
+            "width": 1024,
+            "height": 1024
         },
         "sameAs": []
     };
