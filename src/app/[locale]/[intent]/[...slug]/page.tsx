@@ -271,7 +271,7 @@ export default async function ProgrammaticPage({
     );
 }
 
-import { locales } from '@/i18n/routing';
+
 
 export function generateStaticParams() {
     const params: { locale: string; intent: string; slug: string[] }[] = [];

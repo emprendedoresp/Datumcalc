@@ -128,7 +128,7 @@ export default async function IntentHubPage({ params }: { params: Promise<{ loca
     );
 }
 
-import { locales } from '@/i18n/routing';
+
 
 export function generateStaticParams() {
     return locales.flatMap(locale => {
