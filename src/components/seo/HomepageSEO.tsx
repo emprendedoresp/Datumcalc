@@ -29,28 +29,28 @@ const homepageFAQs = [
 
 export function HomepageSEO() {
     const topQueries = [
-        { title: '30 Tage ab heute',   url: '/addieren/30-tage-ab-heute' },
-        { title: '60 Tage ab heute',   url: '/addieren/60-tage-ab-heute' },
-        { title: '90 Tage ab heute',   url: '/addieren/90-tage-ab-heute' },
-        { title: '100 Tage ab heute',  url: '/addieren/100-tage-ab-heute' },
-        { title: '6 Monate ab heute',  url: '/addieren/6-monate-ab-heute' },
-        { title: '1 Jahr ab heute',    url: '/addieren/1-jahr-ab-heute' },
+        { title: '30 Tage ab heute',   href: { pathname: '/addieren/[...slug]', params: { slug: ['30-tage-ab-heute'] } } as const },
+        { title: '60 Tage ab heute',   href: { pathname: '/addieren/[...slug]', params: { slug: ['60-tage-ab-heute'] } } as const },
+        { title: '90 Tage ab heute',   href: { pathname: '/addieren/[...slug]', params: { slug: ['90-tage-ab-heute'] } } as const },
+        { title: '100 Tage ab heute',  href: { pathname: '/addieren/[...slug]', params: { slug: ['100-tage-ab-heute'] } } as const },
+        { title: '6 Monate ab heute',  href: { pathname: '/addieren/[...slug]', params: { slug: ['6-monate-ab-heute'] } } as const },
+        { title: '1 Jahr ab heute',    href: { pathname: '/addieren/[...slug]', params: { slug: ['1-jahr-ab-heute'] } } as const },
     ];
 
     const eventQueries = [
-        { title: 'Tage bis Weihnachten',    url: '/differenz/tage-bis-weihnachten' },
-        { title: 'Tage bis Silvester',      url: '/differenz/tage-bis-silvester' },
-        { title: 'Tage bis Ostern',         url: '/differenz/tage-bis-ostern' },
-        { title: 'Tage bis Sommeranfang',   url: '/differenz/tage-bis-sommeranfang' },
-        { title: 'Tage bis Neujahr',        url: '/differenz/tage-bis-neujahr' },
-        { title: 'Tage bis zum Urlaub',     url: '/differenz/tage-bis-urlaub' },
+        { title: 'Tage bis Weihnachten',    href: { pathname: '/differenz/[...slug]', params: { slug: ['tage-bis-weihnachten'] } } as const },
+        { title: 'Tage bis Silvester',      href: { pathname: '/differenz/[...slug]', params: { slug: ['tage-bis-silvester'] } } as const },
+        { title: 'Tage bis Ostern',         href: { pathname: '/differenz/[...slug]', params: { slug: ['tage-bis-ostern'] } } as const },
+        { title: 'Tage bis Sommeranfang',   href: { pathname: '/differenz/[...slug]', params: { slug: ['tage-bis-sommeranfang'] } } as const },
+        { title: 'Tage bis Neujahr',        href: { pathname: '/differenz/[...slug]', params: { slug: ['tage-bis-neujahr'] } } as const },
+        { title: 'Tage bis zum Urlaub',     href: { pathname: '/differenz/[...slug]', params: { slug: ['tage-bis-urlaub'] } } as const },
     ];
 
     const guides = [
-        { title: 'Schaltjahre einfach erklärt',   url: '/ratgeber/schaltjahre-erklaert' },
-        { title: 'Wie berechnet man Arbeitstage?', url: '/ratgeber/arbeitstage-berechnen' },
-        { title: 'Wie viele Wochen hat ein Jahr?', url: '/ratgeber/wochen-im-jahr' },
-        { title: 'Was ist ISO 8601?',              url: '/ratgeber/iso-8601-erklaert' },
+        { title: 'Schaltjahre einfach erklärt',   href: { pathname: '/ratgeber/[slug]', params: { slug: 'schaltjahre-erklaert' } } as const },
+        { title: 'Wie berechnet man Arbeitstage?', href: { pathname: '/ratgeber/[slug]', params: { slug: 'arbeitstage-berechnen' } } as const },
+        { title: 'Wie viele Wochen hat ein Jahr?', href: { pathname: '/ratgeber/[slug]', params: { slug: 'wochen-im-jahr' } } as const },
+        { title: 'Was ist ISO 8601?',              href: { pathname: '/ratgeber/[slug]', params: { slug: 'iso-8601-erklaert' } } as const },
     ];
 
     const trustSignals = [
@@ -152,7 +152,7 @@ export function HomepageSEO() {
                             {topQueries.map((q, i) => (
                                 <li key={i}>
                                     <Link
-                                        href={q.url}
+                                        href={q.href}
                                         className="text-white/60 hover:text-white transition-colors flex items-center gap-2 group text-sm"
                                     >
                                         <span className="text-neon/40 group-hover:text-neon text-xs transition-colors" aria-hidden="true">▶</span>
@@ -173,7 +173,7 @@ export function HomepageSEO() {
                             {eventQueries.map((q, i) => (
                                 <li key={i}>
                                     <Link
-                                        href={q.url}
+                                        href={q.href}
                                         className="text-white/60 hover:text-white transition-colors flex items-center gap-2 group text-sm"
                                     >
                                         <span className="text-neon-blue/40 group-hover:text-neon-blue text-xs transition-colors" aria-hidden="true">▶</span>
@@ -194,7 +194,7 @@ export function HomepageSEO() {
                             {guides.map((q, i) => (
                                 <li key={i}>
                                     <Link
-                                        href={q.url}
+                                        href={q.href}
                                         className="text-white/60 hover:text-white transition-colors flex items-center gap-2 group text-sm"
                                     >
                                         <span className="text-white/20 group-hover:text-white/60 text-xs transition-colors" aria-hidden="true">▶</span>

@@ -18,6 +18,7 @@ export const routing = defineRouting({
         '/differenz': { de: '/differenz', en: '/difference', es: '/diferencia', fr: '/difference', it: '/differenza', pt: '/diferenca' },
         '/arbeitstage': { de: '/arbeitstage', en: '/business', es: '/laborables', fr: '/ouvrables', it: '/lavorativi', pt: '/uteis' },
         '/alter': { de: '/alter', en: '/age', es: '/edad', fr: '/age', it: '/eta', pt: '/idade' },
+        '/ratgeber': { de: '/ratgeber', en: '/guide', es: '/guia', fr: '/guide', it: '/guida', pt: '/guia' },
         '/ratgeber/[slug]': { de: '/ratgeber/[slug]', en: '/guide/[slug]', es: '/guia/[slug]', fr: '/guide/[slug]', it: '/guida/[slug]', pt: '/guia/[slug]' },
         '/addieren/[...slug]': { de: '/addieren/[...slug]', en: '/add/[...slug]', es: '/sumar/[...slug]', fr: '/ajouter/[...slug]', it: '/aggiungere/[...slug]', pt: '/adicionar/[...slug]' },
         '/differenz/[...slug]': { de: '/differenz/[...slug]', en: '/difference/[...slug]', es: '/diferencia/[...slug]', fr: '/difference/[...slug]', it: '/differenza/[...slug]', pt: '/diferenca/[...slug]' },

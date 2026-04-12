@@ -48,9 +48,9 @@ export function Footer() {
                     <nav aria-label="Footer Ratgeber">
                         <h3 className="text-white font-bold mb-4">Wissen</h3>
                         <ul className="space-y-3 text-sm text-white/50">
-                            <li><Link href="/ratgeber/schaltjahre-erklaert" className="hover:text-white transition-colors">Schaltjahre erklärt</Link></li>
-                            <li><Link href="/ratgeber/arbeitstage-berechnen" className="hover:text-white transition-colors">Was ist ein Arbeitstag?</Link></li>
-                            <li><Link href="/ratgeber/wochen-im-jahr" className="hover:text-white transition-colors">Wochen im Jahr</Link></li>
+                            <li><Link href={{pathname: '/ratgeber/[slug]', params: {slug: 'schaltjahre-erklaert'}}} className="hover:text-white transition-colors">Schaltjahre erklärt</Link></li>
+                            <li><Link href={{pathname: '/ratgeber/[slug]', params: {slug: 'arbeitstage-berechnen'}}} className="hover:text-white transition-colors">Was ist ein Arbeitstag?</Link></li>
+                            <li><Link href={{pathname: '/ratgeber/[slug]', params: {slug: 'wochen-im-jahr'}}} className="hover:text-white transition-colors">Wochen im Jahr</Link></li>
                         </ul>
                     </nav>
                 </div>

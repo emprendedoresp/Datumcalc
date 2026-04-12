@@ -3,7 +3,7 @@ import { locales } from '@/i18n/routing';
 import { INTENT_TRANSLATIONS, translateSlug } from '@/lib/seo/translations';
 import { CANONICAL_QUERIES } from '@/lib/seo/queryModel';
 import { articles } from '@/lib/articles';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
@@ -74,16 +74,30 @@ export default async function SitemapPage({ params }: { params: Promise<{ locale
                             (intent.id === 'alter' && def.calcMode === 'age')
                         );
 
+                        const internalIntent = intent.id;
+                        const queries = Object.entries(CANONICAL_QUERIES).filter(([_, def]) => 
+                            (internalIntent === 'addieren' && def.calcMode === 'add_subtract') ||
+                            (internalIntent === 'differenz' && def.calcMode === 'difference') ||
+                            (internalIntent === 'arbeitstage' && def.calcMode === 'business_days') ||
+                            (internalIntent === 'alter' && def.calcMode === 'age')
+                        );
+
                         return (
                             <div key={intent.id} className="space-y-4">
-                                <Link href={`/${locale}/${locIntent}`} className="text-lg font-bold hover:text-neon flex items-center gap-2">
+                                <Link href={(`/${internalIntent}` as any)} className="text-lg font-bold hover:text-neon flex items-center gap-2">
                                     <span>{intent.icon}</span>
                                     <span className="capitalize">{locIntent}</span>
                                 </Link>
                                 <ul className="pl-8 space-y-2 border-l border-white/5">
                                     {queries.slice(0, 10).map(([slug]) => (
                                         <li key={slug}>
-                                            <Link href={`/${locale}/${locIntent}/${translateSlug(slug, locale)}`} className="text-white/50 hover:text-white transition-colors text-sm">
+                                            <Link 
+                                                href={{
+                                                    pathname: (`/${internalIntent}/[...slug]` as any),
+                                                    params: { slug: [translateSlug(slug, locale)] }
+                                                }}
+                                                className="text-white/50 hover:text-white transition-colors text-sm"
+                                            >
                                                 {translateSlug(slug, locale).replace(/-/g, ' ')}
                                             </Link>
                                         </li>
@@ -103,7 +117,10 @@ export default async function SitemapPage({ params }: { params: Promise<{ locale
                         {articles.map(article => (
                             <li key={article.slug}>
                                 <Link 
-                                    href={`/${locale}/${INTENT_TRANSLATIONS[locale]['ratgeber']}/${article.slug}`} 
+                                    href={{
+                                        pathname: '/ratgeber/[slug]',
+                                        params: { slug: article.slug }
+                                    }}
                                     className="block p-4 rounded-xl bg-white/5 border border-white/10 hover:border-neon/30 transition-all"
                                 >
                                     <h3 className="font-bold text-white mb-1">{article.title}</h3>
@@ -123,7 +140,7 @@ export default async function SitemapPage({ params }: { params: Promise<{ locale
                         {legalRoutes.map(route => (
                             <li key={route}>
                                 <Link 
-                                    href={`/${locale}/${INTENT_TRANSLATIONS[locale][route] || route}`} 
+                                    href={(`/${route}` as any)} 
                                     className="text-white/60 hover:text-neon flex items-center justify-between group py-2"
                                 >
                                     <span className="capitalize">{(INTENT_TRANSLATIONS[locale][route] || route).replace(/-/g, ' ')}</span>
