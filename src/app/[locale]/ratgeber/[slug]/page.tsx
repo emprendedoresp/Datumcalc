@@ -9,6 +9,30 @@ export function generateStaticParams() {
     return articles.map(a => ({ slug: a.slug }));
 }
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string; locale: string }> }) {
+    const { locale, slug } = await params;
+    const article = getArticleBySlug(slug);
+    const siteUrl = "https://datums-rechner.com";
+    const fullUrl = `${siteUrl}/${locale}/ratgeber/${slug}`;
+
+    if (!article) return {};
+
+    return {
+        title: `${article.title} | Ratgeber`,
+        description: article.description,
+        alternates: {
+            canonical: fullUrl
+        },
+        openGraph: {
+            title: article.title,
+            description: article.description,
+            url: fullUrl,
+            type: 'article',
+            locale: locale,
+        }
+    };
+}
+
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string; locale: string }> }) {
     const { locale, slug } = await params;
     const article = getArticleBySlug(slug);
@@ -35,7 +59,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 <aside aria-label="Autoreninformation und Verifizierung" className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12 bg-white/[0.02] border border-white/10 rounded-2xl p-4 w-fit mx-auto backdrop-blur-md">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-neon to-neon-blue p-[2px]">
-                            <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix" alt="Felix" className="w-full h-full rounded-full bg-background" />
+                            <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix" alt="Felix Schmidt" className="w-full h-full rounded-full bg-background" />
                         </div>
                         <div className="text-left">
                             <p className="text-sm font-bold text-white">Felix Schmidt</p>

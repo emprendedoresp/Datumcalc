@@ -3,9 +3,21 @@ import { getTranslations } from 'next-intl/server';
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'Common.titles' });
+    const siteUrl = "https://datums-rechner.com";
+    const fullUrl = `${siteUrl}/${locale}/datenschutz`;
+
     return {
         title: `${t('privacy')} - Datumsrechner`,
-        description: `Informationen darüber, wie wir Ihre Daten schützen und welche Dienste wir nutzen.`
+        description: `Datenschutzerklärung von datums-rechner.com. Erfahren Sie, wie wir mit Ihren Daten gemäß DSGVO umgehen.`,
+        alternates: {
+            canonical: fullUrl
+        },
+        openGraph: {
+            title: `${t('privacy')} - Datumsrechner`,
+            url: fullUrl,
+            type: 'website',
+            locale: locale,
+        }
     };
 }
 

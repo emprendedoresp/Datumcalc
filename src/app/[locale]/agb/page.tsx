@@ -3,9 +3,21 @@ import { getTranslations } from 'next-intl/server';
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'Common.titles' });
+    const siteUrl = "https://datums-rechner.com";
+    const fullUrl = `${siteUrl}/${locale}/agb`;
+
     return {
         title: `${t('terms')} - Datumsrechner`,
-        description: `Allgemeine Geschäftsbedingungen und Nutzungsregeln für datums-rechner.com.`
+        description: `Allgemeine Geschäftsbedingungen und Nutzungsbestimmungen für datums-rechner.com.`,
+        alternates: {
+            canonical: fullUrl
+        },
+        openGraph: {
+            title: `${t('terms')} - Datumsrechner`,
+            url: fullUrl,
+            type: 'website',
+            locale: locale,
+        }
     };
 }
 

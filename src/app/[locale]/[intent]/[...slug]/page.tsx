@@ -102,25 +102,45 @@ function computeInstantResult(intent: string, slugStr: string, localeStr: string
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; intent: string; slug: string[] }> }) {
     const { locale, intent, slug } = await params;
     const slugStr = slug.join('-');
-    const urlLocale = locale === 'de' ? '' : `/${locale}`;
+    const siteUrl = "https://datums-rechner.com";
+    const fullUrl = `${siteUrl}/${locale}/${intent}/${slugStr}`;
     
     // SERP Domination formatting
     const isAdd = intent === 'addieren' || intent === 'add';
-    const match = slugStr.match(/^(\d+)-(tage|monate|jahre)-ab-heute$/);
+    const isDiff = intent === 'differenz' || intent === 'difference';
     
-    if (isAdd && match) {
-        return {
-            title: `${match[1]} ${match[2]} ab heute → Genaues Datum ✓`,
-            description: `Kostenloser Rechner: Erfahren Sie sofort das exakte Datum in ${match[1]} ${match[2]} inklusive Berücksichtigung von Schaltjahren und Wochenenden.`,
-            alternates: {
-                canonical: `https://datums-rechner.com${urlLocale}/${intent}/${slugStr}`
-            }
-        };
+    let title = `${slugStr.replace(/-/g, ' ')} → Exakte Berechnung ✓`;
+    let description = `Nutzen Sie unseren kostenlosen Datumsrechner für blitzschnelle und exakte Ergebnisse für ${slugStr.replace(/-/g, ' ')}. ISO 8601 konform.`;
+
+    if (isAdd) {
+        const match = slugStr.match(/^(\d+)-(tage|monate|jahre)-ab-heute$/);
+        if (match) {
+            title = locale === 'de' 
+                ? `${match[1]} ${match[2]} ab heute → Genaues Datum ✓`
+                : `${match[1]} ${match[2]} from today → Exact Date ✓`;
+            description = locale === 'de'
+                ? `Kostenloser Rechner: Erfahren Sie sofort das exakte Datum in ${match[1]} ${match[2]} inklusive Berücksichtigung von Schaltjahren.`
+                : `Free calculator: Find out the exact date in ${match[1]} ${match[2]} including leap year considerations.`;
+        }
+    } else if (isDiff) {
+        title = locale === 'de'
+            ? `Tage bis ${slugStr.replace('tage-bis-', '').replace(/-/g, ' ')} → Jetzt berechnen`
+            : `Days until ${slugStr.replace('days-until-', '').replace(/-/g, ' ')} → Calculate now`;
     }
 
     return {
-        title: `${slugStr.replace(/-/g, ' ')} → Exakte Berechnung ✓`,
-        description: `Nutzen Sie unseren kostenlosen Datumsrechner für blitzschnelle und exakte Ergebnisse für ${slugStr.replace(/-/g, ' ')}.`,
+        title,
+        description,
+        alternates: {
+            canonical: fullUrl
+        },
+        openGraph: {
+            title,
+            description,
+            url: fullUrl,
+            type: 'article',
+            locale: locale,
+        }
     };
 }
 
@@ -223,9 +243,9 @@ export default async function ProgrammaticPage({
 
             {/* 3. SEO Hub & Content Layout */}
             <section aria-label="Detaillierte Informationen" className="max-w-4xl mx-auto space-y-12 animate-slide-up-fade" style={{ animationDelay: '0.3s' }}>
-                <SEOContentBlock intent={intent} slug={slugStr} />
+                <SEOContentBlock intent={intent} slug={slugStr} locale={locale} />
                 <InternalLinksBlock locale={locale} intent={intent} slug={slugStr} />
-                <FAQBlock intent={intent} slug={slugStr} />
+                <FAQBlock intent={intent} slug={slugStr} locale={locale} />
             </section>
 
             <TrustSignals />

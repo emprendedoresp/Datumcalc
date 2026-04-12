@@ -9,21 +9,27 @@ export function InternalLinksBlock({ locale, intent, slug }: { locale: string; i
     const numValue = match ? parseInt(match[1]) : 0;
 
     if (numValue > 0) {
-        // +-10% logic approx
-        const plus10 = Math.round(numValue * 1.1);
-        const minus10 = Math.round(numValue * 0.9);
-        links.push({ label: `${minus10} Tage ab heute`, urlSlug: `addieren/${minus10}-tage-ab-heute`, type: 'Variation' });
-        links.push({ label: `${plus10} Tage ab heute`, urlSlug: `addieren/${plus10}-tage-ab-heute`, type: 'Variation' });
+        // +-10%, +-20% logic approx
+        const v1 = Math.round(numValue * 0.8);
+        const v2 = Math.round(numValue * 0.9);
+        const v3 = Math.round(numValue * 1.1);
+        const v4 = Math.round(numValue * 1.2);
+        links.push({ label: `${v1} Tage ab heute`, urlSlug: `addieren/${v1}-tage-ab-heute`, type: 'Variation' });
+        links.push({ label: `${v2} Tage ab heute`, urlSlug: `addieren/${v2}-tage-ab-heute`, type: 'Variation' });
+        links.push({ label: `${v3} Tage ab heute`, urlSlug: `addieren/${v3}-tage-ab-heute`, type: 'Variation' });
+        links.push({ label: `${v4} Tage ab heute`, urlSlug: `addieren/${v4}-tage-ab-heute`, type: 'Variation' });
     } else {
         links.push({ label: '30 Tage ab heute', urlSlug: 'addieren/30-tage-ab-heute', type: 'Beliebt' });
         links.push({ label: '90 Tage ab heute', urlSlug: 'addieren/90-tage-ab-heute', type: 'Beliebt' });
+        links.push({ label: '100 Tage ab heute', urlSlug: 'addieren/100-tage-ab-heute', type: 'Beliebt' });
+        links.push({ label: '365 Tage ab heute', urlSlug: 'addieren/365-tage-ab-heute', type: 'Beliebt' });
     }
 
-    // Add 1 event link
+    // Add more event & guide links
     links.push({ label: 'Tage bis Weihnachten', urlSlug: 'differenz/tage-bis-weihnachten', type: 'Event' });
-    
-    // Add 1 authority guide
+    links.push({ label: 'Tage bis Silvester', urlSlug: 'differenz/tage-bis-silvester', type: 'Event' });
     links.push({ label: 'Was ist ein Arbeitstag?', urlSlug: 'ratgeber/was-ist-ein-arbeitstag', type: 'Ratgeber' });
+    links.push({ label: 'Schaltjahre erklärt', urlSlug: 'ratgeber/schaltjahre-erklaert', type: 'Ratgeber' });
 
     return (
         <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 mb-12">

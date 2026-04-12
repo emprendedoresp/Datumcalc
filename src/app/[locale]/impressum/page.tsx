@@ -3,9 +3,21 @@ import { getTranslations } from 'next-intl/server';
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'Common.titles' });
+    const siteUrl = "https://datums-rechner.com";
+    const fullUrl = `${siteUrl}/${locale}/impressum`;
+
     return {
         title: `${t('imprint')} - Datumsrechner`,
-        description: `Rechtliche Informationen und Kontakt zum Projekt Datumsrechner.`
+        description: `Impressum und rechtliche Anbieterkennzeichnung für datums-rechner.com.`,
+        alternates: {
+            canonical: fullUrl
+        },
+        openGraph: {
+            title: `${t('imprint')} - Datumsrechner`,
+            url: fullUrl,
+            type: 'website',
+            locale: locale,
+        }
     };
 }
 

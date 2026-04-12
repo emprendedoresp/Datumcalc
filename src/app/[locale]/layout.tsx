@@ -42,7 +42,7 @@ export async function generateMetadata(
             : "Calculate exact date differences, add days or determine business days. Free, precise and ISO 8601 compliant.",
         metadataBase: new URL(siteUrl),
         alternates: {
-            canonical: `./`,
+            canonical: `${siteUrl}/${locale}`,
             languages: languages,
         },
         icons: {
@@ -53,7 +53,7 @@ export async function generateMetadata(
         openGraph: {
             type: 'website',
             locale: locale,
-            url: siteUrl,
+            url: `${siteUrl}/${locale}`,
             siteName: 'Datumsrechner',
             images: [
                 {

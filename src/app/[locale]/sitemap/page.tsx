@@ -18,9 +18,21 @@ import {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'Common.titles' });
+    const siteUrl = "https://datums-rechner.com";
+    const fullUrl = `${siteUrl}/${locale}/sitemap`;
+
     return {
         title: `${t('sitemap')} - Datumsrechner`,
-        description: `Übersicht aller Tools, Ratgeber und rechtlichen Informationen von datums-rechner.com.`
+        description: `Übersicht aller Tools, Ratgeber und rechtlichen Informationen von datums-rechner.com.`,
+        alternates: {
+            canonical: fullUrl
+        },
+        openGraph: {
+            title: `${t('sitemap')} - Datumsrechner`,
+            url: fullUrl,
+            type: 'website',
+            locale: locale,
+        }
     };
 }
 

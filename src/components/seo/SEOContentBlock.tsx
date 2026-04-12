@@ -1,9 +1,9 @@
 import { generateSEOContent } from '@/lib/seo/contentEngine';
 
-export function SEOContentBlock({ intent, slug }: { intent: string; slug: string }) {
+export function SEOContentBlock({ intent, slug, locale }: { intent: string; slug: string; locale: string }) {
     const match = slug.match(/^(\d+)-/);
     const numValue = match ? parseInt(match[1]) : undefined;
-    const content = generateSEOContent(intent, slug, numValue);
+    const content = generateSEOContent(intent, slug, locale, numValue);
 
     return (
         <section className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 mt-12 mb-12">

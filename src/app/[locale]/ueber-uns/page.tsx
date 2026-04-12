@@ -4,9 +4,21 @@ import { CalculatorCore } from '@/components/calculator/CalculatorCore';
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'Common.titles' });
+    const siteUrl = "https://datums-rechner.com";
+    const fullUrl = `${siteUrl}/${locale}/ueber-uns`;
+
     return {
         title: `${t('about')} - Datumsrechner`,
-        description: `Erfahren Sie mehr über die Mission und die Vision von datums-rechner.com – präzise Zeitberechnungen für alle.`
+        description: `Erfahren Sie mehr über die Mission und die Vision von datums-rechner.com – präzise Zeitberechnungen für alle.`,
+        alternates: {
+            canonical: fullUrl
+        },
+        openGraph: {
+            title: `${t('about')} - Datumsrechner`,
+            url: fullUrl,
+            type: 'website',
+            locale: locale,
+        }
     };
 }
 

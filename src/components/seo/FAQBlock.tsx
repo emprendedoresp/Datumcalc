@@ -1,9 +1,9 @@
 import { generateDynamicFAQs } from '@/lib/seo/contentEngine';
 
-export function FAQBlock({ intent, slug }: { intent: string; slug: string }) {
+export function FAQBlock({ intent, slug, locale }: { intent: string; slug: string; locale: string }) {
     const match = slug.match(/^(\d+)-/);
     const numValue = match ? parseInt(match[1]) : undefined;
-    const faqs = generateDynamicFAQs(intent, slug, numValue);
+    const faqs = generateDynamicFAQs(intent, slug, locale, numValue);
 
     const jsonLd = {
         "@context": "https://schema.org",
