@@ -62,11 +62,11 @@ export default async function IntentHubPage({ params }: { params: Promise<{ loca
     const calcMode = intentMap[internalIntent.toLowerCase()];
     
     // Group known queries for this hub
-    const activeQueries = Object.entries(CANONICAL_QUERIES).filter(([slug, def]) => def.calcMode === calcMode && def.isIndexable);
+    const activeQueries = Object.values(CANONICAL_QUERIES).filter((def) => def.calcMode === calcMode && def.isIndexable);
     
     // Split into events vs generic for nicely grouped navigation
-    const informational = activeQueries.filter(([slug, def]) => def.intentType === 'Informational');
-    const transactional = activeQueries.filter(([slug, def]) => def.intentType === 'Transactional');
+    const informational = activeQueries.filter((def) => def.intentType === 'Informational');
+    const transactional = activeQueries.filter((def) => def.intentType === 'Transactional');
 
     return (
         <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -89,10 +89,10 @@ export default async function IntentHubPage({ params }: { params: Promise<{ loca
                             {locale === 'de' ? 'Häufige Berechnungen' : 'Popular Calculations'}
                         </h2>
                         <ul className="space-y-3">
-                            {transactional.map(([slug]) => (
-                                <li key={slug}>
-                                    <Link href={`/${locale}/${intent}/${translateSlug(slug, locale)}`} className="text-white hover:text-neon flex items-center justify-between group p-3 rounded-lg hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
-                                        <span>{translateSlug(slug, locale).replace(/-/g, ' ')}</span>
+                            {transactional.map((def) => (
+                                <li key={def.canonicalSlug}>
+                                    <Link href={`/${locale}/${intent}/${translateSlug(def.canonicalSlug, locale)}`} className="text-white hover:text-neon flex items-center justify-between group p-3 rounded-lg hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
+                                        <span>{translateSlug(def.canonicalSlug, locale).replace(/-/g, ' ')}</span>
                                         <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity text-neon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                         </svg>
@@ -110,10 +110,10 @@ export default async function IntentHubPage({ params }: { params: Promise<{ loca
                             {locale === 'de' ? 'Meilensteine & Events' : 'Milestones & Events'}
                         </h2>
                         <ul className="space-y-3">
-                            {informational.map(([slug]) => (
-                                <li key={slug}>
-                                    <Link href={`/${locale}/${intent}/${translateSlug(slug, locale)}`} className="text-white hover:text-neon flex items-center justify-between group p-3 rounded-lg hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
-                                        <span className="capitalize">{translateSlug(slug, locale).replace(/-/g, ' ')}</span>
+                            {informational.map((def) => (
+                                <li key={def.canonicalSlug}>
+                                    <Link href={`/${locale}/${intent}/${translateSlug(def.canonicalSlug, locale)}`} className="text-white hover:text-neon flex items-center justify-between group p-3 rounded-lg hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
+                                        <span className="capitalize">{translateSlug(def.canonicalSlug, locale).replace(/-/g, ' ')}</span>
                                         <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity text-neon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                         </svg>

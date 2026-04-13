@@ -67,19 +67,19 @@ export default async function SitemapPage({ params }: { params: Promise<{ locale
                     </h2>
                     {calculatorIntents.map(intent => {
                         const locIntent = INTENT_TRANSLATIONS[locale][intent.id] || intent.id;
-                        const queries = Object.entries(CANONICAL_QUERIES).filter(([_, def]) => 
-                            (intent.id === 'addieren' && def.calcMode === 'add_subtract') ||
-                            (intent.id === 'differenz' && def.calcMode === 'difference') ||
-                            (intent.id === 'arbeitstage' && def.calcMode === 'business_days') ||
-                            (intent.id === 'alter' && def.calcMode === 'age')
-                        );
-
                         const internalIntent = intent.id;
-                        const queries = Object.entries(CANONICAL_QUERIES).filter(([_, def]) => 
-                            (internalIntent === 'addieren' && def.calcMode === 'add_subtract') ||
-                            (internalIntent === 'differenz' && def.calcMode === 'difference') ||
-                            (internalIntent === 'arbeitstage' && def.calcMode === 'business_days') ||
-                            (internalIntent === 'alter' && def.calcMode === 'age')
+                        
+                        // Centralized mapping (scalable)
+                        const intentToMode: Record<string, string> = {
+                            addieren: 'add_subtract',
+                            differenz: 'difference',
+                            arbeitstage: 'business_days',
+                            alter: 'age'
+                        };
+                        const expectedMode = intentToMode[internalIntent];
+
+                        const queries = Object.values(CANONICAL_QUERIES).filter((def) => 
+                            def.calcMode === expectedMode
                         );
 
                         return (
@@ -89,16 +89,16 @@ export default async function SitemapPage({ params }: { params: Promise<{ locale
                                     <span className="capitalize">{locIntent}</span>
                                 </Link>
                                 <ul className="pl-8 space-y-2 border-l border-white/5">
-                                    {queries.slice(0, 10).map(([slug]) => (
-                                        <li key={slug}>
+                                    {queries.slice(0, 10).map((def) => (
+                                        <li key={def.canonicalSlug}>
                                             <Link 
                                                 href={{
                                                     pathname: (`/${internalIntent}/[...slug]` as any),
-                                                    params: { slug: [translateSlug(slug, locale)] }
+                                                    params: { slug: [translateSlug(def.canonicalSlug, locale)] }
                                                 }}
                                                 className="text-white/50 hover:text-white transition-colors text-sm"
                                             >
-                                                {translateSlug(slug, locale).replace(/-/g, ' ')}
+                                                {translateSlug(def.canonicalSlug, locale).replace(/-/g, ' ')}
                                             </Link>
                                         </li>
                                     ))}
