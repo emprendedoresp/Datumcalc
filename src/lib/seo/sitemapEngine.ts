@@ -16,6 +16,7 @@ const CALC_MODE_TO_INTENT: Record<string, string> = {
 
 // Define standard buckets to generate dynamic sitemaps
 export const BASE_URL = 'https://datums-rechner.com'; 
+const STATIC_LASTMOD = new Date('2024-01-01T00:00:00Z');
 
 function getLocalizedUrl(path: string, locale: string) {
     const prefix = locale === 'de' ? '' : `/${locale}`;
@@ -31,7 +32,7 @@ export function getCoreSitemapUrls() {
         paths.forEach(path => {
             urls.push({
                 url: getLocalizedUrl(path, locale),
-                lastModified: new Date(),
+                lastModified: STATIC_LASTMOD,
                 changeFrequency: path === '' ? 'daily' : 'monthly',
                 priority: path === '' ? 1.0 : 0.5
             });
@@ -53,7 +54,7 @@ export function getSEOSitemapUrls() {
                 
                 urls.push({
                     url: getLocalizedUrl(`/${locIntent}/${locSlug}`, locale),
-                    lastModified: new Date(),
+                    lastModified: STATIC_LASTMOD,
                     changeFrequency: 'weekly',
                     priority: 0.8
                 });
@@ -71,7 +72,7 @@ export function getSEOSitemapUrls() {
                 
                 urls.push({
                     url: getLocalizedUrl(`/${locIntent}/${locSlug}`, locale),
-                    lastModified: new Date(),
+                    lastModified: STATIC_LASTMOD,
                     changeFrequency: 'weekly',
                     priority: 0.7
                 });
@@ -94,7 +95,7 @@ export function getEventsSitemapUrls() {
                  
                  urls.push({
                     url: getLocalizedUrl(`/${locIntent}/${locSlug}`, locale),
-                    lastModified: new Date(),
+                    lastModified: STATIC_LASTMOD,
                     changeFrequency: 'monthly',
                     priority: 0.9
                 });

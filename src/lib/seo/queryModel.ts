@@ -1,3 +1,5 @@
+import { cache } from 'react';
+
 export type SearchIntentType = 'Informational' | 'Transactional' | 'Navigational';
 export type PriorityLevel = 'High' | 'Medium' | 'Low';
 
@@ -41,8 +43,9 @@ export const QUERY_ALIASES: Record<string, string> = {
 /**
  * Resolves an incoming slug to its canonical version.
  * If not found directly, tries to match regex patterns.
+ * Wrapped in React cache to prevent duplicate processing in the same request.
  */
-export function resolveCanonicalQuery(slugStr: string): { canonicalSlug: string; isExact: boolean, def?: QueryDefinition } {
+export const resolveCanonicalQuery = cache((slugStr: string): { canonicalSlug: string; isExact: boolean, def?: QueryDefinition } => {
     if (CANONICAL_QUERIES[slugStr]) {
         return { canonicalSlug: slugStr, isExact: true, def: CANONICAL_QUERIES[slugStr] };
     }
@@ -73,4 +76,4 @@ export function resolveCanonicalQuery(slugStr: string): { canonicalSlug: string;
     }
 
     return { canonicalSlug: '', isExact: false };
-}
+});

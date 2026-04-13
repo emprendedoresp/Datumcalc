@@ -23,6 +23,7 @@ const intentToModeMap: Record<string, string> = {
     'age': 'age'
 };
 export const revalidate = 86400; // 24 hours ISR revalidation
+export const dynamicParams = false; // Disable on-demand rendering for any URL not in generateStaticParams
 
 function computeInstantResult(intent: string, slugStr: string, localeStr: string) {
     const today = new Date();
