@@ -1,4 +1,5 @@
 import { Link } from '@/i18n/routing';
+import { ROUTES } from '@/lib/routes';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { ShieldCheck, Calculator, CalendarClock } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -37,10 +38,10 @@ export function Footer() {
                             <Calculator className="w-4 h-4 text-neon-blue" /> Tools
                         </h3>
                         <ul className="space-y-3 text-sm text-white/50">
-                            <li><Link href="/differenz" className="hover:text-white transition-colors">Tage zählen (Differenz)</Link></li>
-                            <li><Link href="/addieren" className="hover:text-white transition-colors">Datum addieren</Link></li>
-                            <li><Link href="/arbeitstage" className="hover:text-white transition-colors">Arbeitstage berechnen</Link></li>
-                            <li><Link href="/alter" className="hover:text-white transition-colors">Alter berechnen</Link></li>
+                            <li><Link href={ROUTES.differenz} className="hover:text-white transition-colors">Tage zählen (Differenz)</Link></li>
+                            <li><Link href={ROUTES.addieren} className="hover:text-white transition-colors">Datum addieren</Link></li>
+                            <li><Link href={ROUTES.arbeitstage} className="hover:text-white transition-colors">Arbeitstage berechnen</Link></li>
+                            <li><Link href={ROUTES.alter} className="hover:text-white transition-colors">Alter berechnen</Link></li>
                         </ul>
                     </nav>
 
@@ -48,9 +49,9 @@ export function Footer() {
                     <nav aria-label="Footer Ratgeber">
                         <h3 className="text-white font-bold mb-4">Wissen</h3>
                         <ul className="space-y-3 text-sm text-white/50">
-                            <li><Link href={{pathname: '/ratgeber/[slug]', params: {slug: 'schaltjahre-erklaert'}}} className="hover:text-white transition-colors">Schaltjahre erklärt</Link></li>
-                            <li><Link href={{pathname: '/ratgeber/[slug]', params: {slug: 'arbeitstage-berechnen'}}} className="hover:text-white transition-colors">Was ist ein Arbeitstag?</Link></li>
-                            <li><Link href={{pathname: '/ratgeber/[slug]', params: {slug: 'wochen-im-jahr'}}} className="hover:text-white transition-colors">Wochen im Jahr</Link></li>
+                            <li><Link href={ROUTES.getRatgeber('schaltjahre-erklaert')} className="hover:text-white transition-colors">Schaltjahre erklärt</Link></li>
+                            <li><Link href={ROUTES.getRatgeber('arbeitstage-berechnen')} className="hover:text-white transition-colors">Was ist ein Arbeitstag?</Link></li>
+                            <li><Link href={ROUTES.getRatgeber('wochen-im-jahr')} className="hover:text-white transition-colors">Wochen im Jahr</Link></li>
                         </ul>
                     </nav>
                 </div>
@@ -66,11 +67,11 @@ export function Footer() {
                     <p className="order-2 md:order-1">© {new Date().getFullYear()} Datumsrechner. Alle Rechte vorbehalten.</p>
                     
                     <nav aria-label="Footer Legal" className="flex flex-wrap justify-center gap-x-6 gap-y-4 order-1 md:order-2 font-medium">
-                        <Link href="/ueber-uns" className="hover:text-white transition-colors">{tCommon('titles.about')}</Link>
-                        <Link href="/sitemap" className="hover:text-white transition-colors">{tCommon('titles.sitemap')}</Link>
-                        <Link href="/datenschutz" className="hover:text-white transition-colors">{tCommon('titles.privacy')}</Link>
-                        <Link href="/agb" className="hover:text-white transition-colors">{tCommon('titles.terms')}</Link>
-                        <Link href="/impressum" className="hover:text-white transition-colors">{tCommon('titles.imprint')}</Link>
+                        <Link href={ROUTES.about} className="hover:text-white transition-colors">{tCommon('titles.about')}</Link>
+                        <Link href={ROUTES.sitemap} className="hover:text-white transition-colors">{tCommon('titles.sitemap')}</Link>
+                        <Link href={ROUTES.datenschutz} className="hover:text-white transition-colors">{tCommon('titles.privacy')}</Link>
+                        <Link href={ROUTES.agb} className="hover:text-white transition-colors">{tCommon('titles.terms')}</Link>
+                        <Link href={ROUTES.impressum} className="hover:text-white transition-colors">{tCommon('titles.imprint')}</Link>
                     </nav>
                 </div>
             </div>

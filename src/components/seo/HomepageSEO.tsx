@@ -1,4 +1,5 @@
 import { Link } from '@/i18n/routing';
+import { ROUTES } from '@/lib/routes';
 import { CheckCircle2, CalendarCheck2, Clock4, Users, ShieldCheck } from 'lucide-react';
 
 const siteUrl = 'https://datums-rechner.com';
@@ -29,28 +30,28 @@ const homepageFAQs = [
 
 export function HomepageSEO() {
     const topQueries = [
-        { title: '30 Tage ab heute',   href: { pathname: '/addieren/[...slug]', params: { slug: ['30-tage-ab-heute'] } } as const },
-        { title: '60 Tage ab heute',   href: { pathname: '/addieren/[...slug]', params: { slug: ['60-tage-ab-heute'] } } as const },
-        { title: '90 Tage ab heute',   href: { pathname: '/addieren/[...slug]', params: { slug: ['90-tage-ab-heute'] } } as const },
-        { title: '100 Tage ab heute',  href: { pathname: '/addieren/[...slug]', params: { slug: ['100-tage-ab-heute'] } } as const },
-        { title: '6 Monate ab heute',  href: { pathname: '/addieren/[...slug]', params: { slug: ['6-monate-ab-heute'] } } as const },
-        { title: '1 Jahr ab heute',    href: { pathname: '/addieren/[...slug]', params: { slug: ['1-jahr-ab-heute'] } } as const },
+        { title: '30 Tage ab heute',   href: ROUTES.getAddieren('30-tage-ab-heute') },
+        { title: '60 Tage ab heute',   href: ROUTES.getAddieren('60-tage-ab-heute') },
+        { title: '90 Tage ab heute',   href: ROUTES.getAddieren('90-tage-ab-heute') },
+        { title: '100 Tage ab heute',  href: ROUTES.getAddieren('100-tage-ab-heute') },
+        { title: '6 Monate ab heute',  href: ROUTES.getAddieren('6-monate-ab-heute') },
+        { title: '1 Jahr ab heute',    href: ROUTES.getAddieren('1-jahr-ab-heute') },
     ];
 
     const eventQueries = [
-        { title: 'Tage bis Weihnachten',    href: { pathname: '/differenz/[...slug]', params: { slug: ['tage-bis-weihnachten'] } } as const },
-        { title: 'Tage bis Silvester',      href: { pathname: '/differenz/[...slug]', params: { slug: ['tage-bis-silvester'] } } as const },
-        { title: 'Tage bis Ostern',         href: { pathname: '/differenz/[...slug]', params: { slug: ['tage-bis-ostern'] } } as const },
-        { title: 'Tage bis Sommeranfang',   href: { pathname: '/differenz/[...slug]', params: { slug: ['tage-bis-sommeranfang'] } } as const },
-        { title: 'Tage bis Neujahr',        href: { pathname: '/differenz/[...slug]', params: { slug: ['tage-bis-neujahr'] } } as const },
-        { title: 'Tage bis zum Urlaub',     href: { pathname: '/differenz/[...slug]', params: { slug: ['tage-bis-urlaub'] } } as const },
+        { title: 'Tage bis Weihnachten',    href: ROUTES.getDifferenz('tage-bis-weihnachten') },
+        { title: 'Tage bis Silvester',      href: ROUTES.getDifferenz('tage-bis-silvester') },
+        { title: 'Tage bis Ostern',         href: ROUTES.getDifferenz('tage-bis-ostern') },
+        { title: 'Tage bis Sommeranfang',   href: ROUTES.getDifferenz('tage-bis-sommeranfang') },
+        { title: 'Tage bis Neujahr',        href: ROUTES.getDifferenz('tage-bis-neujahr') },
+        { title: 'Tage bis zum Urlaub',     href: ROUTES.getDifferenz('tage-bis-urlaub') },
     ];
 
     const guides = [
-        { title: 'Schaltjahre einfach erklärt',   href: { pathname: '/ratgeber/[slug]', params: { slug: 'schaltjahre-erklaert' } } as const },
-        { title: 'Wie berechnet man Arbeitstage?', href: { pathname: '/ratgeber/[slug]', params: { slug: 'arbeitstage-berechnen' } } as const },
-        { title: 'Wie viele Wochen hat ein Jahr?', href: { pathname: '/ratgeber/[slug]', params: { slug: 'wochen-im-jahr' } } as const },
-        { title: 'Was ist ISO 8601?',              href: { pathname: '/ratgeber/[slug]', params: { slug: 'iso-8601-erklaert' } } as const },
+        { title: 'Schaltjahre einfach erklärt',   href: ROUTES.getRatgeber('schaltjahre-erklaert') },
+        { title: 'Wie berechnet man Arbeitstage?', href: ROUTES.getRatgeber('arbeitstage-berechnen') },
+        { title: 'Wie viele Wochen hat ein Jahr?', href: ROUTES.getRatgeber('wochen-im-jahr') },
+        { title: 'Was ist ISO 8601?',              href: ROUTES.getRatgeber('iso-8601-erklaert') },
     ];
 
     const trustSignals = [
