@@ -2,7 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { locales } from '@/i18n/routing';
 import { INTENT_TRANSLATIONS, translateSlug } from '@/lib/seo/translations';
 import { CANONICAL_QUERIES } from '@/lib/seo/queryModel';
-import { articles } from '@/lib/articles';
+import { getArticles } from '@/lib/articles';
 import { Link } from '@/i18n/routing';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -38,6 +38,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function SitemapPage({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'Common.titles' });
+    const isDe = locale === 'de';
 
     const calculatorIntents = [
         { id: 'addieren', icon: '➕' },
@@ -111,10 +112,10 @@ export default async function SitemapPage({ params }: { params: Promise<{ locale
                 {/* 2. Guides & Articles */}
                 <section className="space-y-8">
                     <h2 className="text-2xl font-bold border-b border-white/10 pb-4 mb-6 flex items-center gap-3">
-                        <span className="text-neon">02.</span> Ratgeber
+                        <span className="text-neon">02.</span> {isDe ? 'Ratgeber' : 'Guides'}
                     </h2>
                     <ul className="space-y-4">
-                        {articles.map(article => (
+                        {getArticles(locale).map(article => (
                             <li key={article.slug}>
                                 <Link 
                                     href={{
@@ -131,10 +132,36 @@ export default async function SitemapPage({ params }: { params: Promise<{ locale
                     </ul>
                 </section>
 
-                {/* 3. Legal & Settings */}
+                {/* 3. Numeric Variations Directory (Anti-Orphan) */}
+                <section className="space-y-8 lg:col-span-3">
+                    <h2 className="text-2xl font-bold border-b border-white/10 pb-4 mb-6 flex items-center gap-3">
+                        <span className="text-neon">03.</span> {isDe ? 'Häufige Zeitspannen' : 'Common Time Spans'}
+                    </h2>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                        {[30, 45, 60, 90, 100, 120, 150, 180, 200, 365, 500, 730, 1000].map(days => {
+                            const canonicalSlug = `${days}-tage-ab-heute`;
+                            const locSlug = translateSlug(canonicalSlug, locale);
+                            const locIntent = INTENT_TRANSLATIONS[locale]['addieren'] || 'addieren';
+                            return (
+                                <Link 
+                                    key={days}
+                                    href={{
+                                        pathname: (`/${locIntent}/[...slug]` as any),
+                                        params: { slug: [locSlug] }
+                                    }}
+                                    className="px-4 py-2 rounded-lg bg-white/5 border border-white/5 hover:border-neon/30 text-xs text-center text-white/50 hover:text-white transition-all capitalize"
+                                >
+                                    {locSlug.replace(/-/g, ' ')}
+                                </Link>
+                            );
+                        })}
+                    </div>
+                </section>
+
+                {/* 4. Legal & Settings */}
                 <section className="space-y-8">
                     <h2 className="text-2xl font-bold border-b border-white/10 pb-4 mb-6 flex items-center gap-3">
-                        <span className="text-neon">03.</span> Rechtliches
+                        <span className="text-neon">04.</span> {isDe ? 'Rechtliches' : 'Legal'}
                     </h2>
                     <ul className="space-y-3">
                         {legalRoutes.map(route => (
@@ -151,9 +178,13 @@ export default async function SitemapPage({ params }: { params: Promise<{ locale
                     </ul>
 
                     <div className="mt-12 p-6 rounded-2xl bg-gradient-to-br from-neon/10 to-transparent border border-neon/20">
-                        <h3 className="font-bold text-white mb-2 italic">ISO 8601 zertifiziert</h3>
+                        <h3 className="font-bold text-white mb-2 italic">
+                            {isDe ? 'ISO 8601 zertifiziert' : 'ISO 8601 Certified'}
+                        </h3>
                         <p className="text-xs text-white/50 leading-relaxed">
-                            Alle Berechnungen auf dieser Website unterliegen strikten mathematischen Kontrollen und halten den internationalen Standard für Datums- und Zeitangaben ein.
+                            {isDe 
+                                ? 'Alle Berechnungen auf dieser Website unterliegen strikten mathematischen Kontrollen und halten den internationalen Standard für Datums- und Zeitangaben ein.'
+                                : 'All calculations on this website are subject to strict mathematical controls and comply with the international standard for date and time specifications.'}
                         </p>
                     </div>
                 </section>

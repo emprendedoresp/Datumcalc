@@ -17,10 +17,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     languages['x-default'] = `${siteUrl}/de`;
 
     return {
-        title: locale === 'de' ? "Datumsrechner | Tage zählen & Datum addieren ✓" : "Date Calculator | Count days & add dates ✓",
+        title: locale === 'de' 
+            ? "Datumsrechner online | Differenz berechnen & Tage addieren ✓" 
+            : "Date Calculator Online | Count Days & Add Dates Precisely ✓",
         description: locale === 'de' 
-            ? "Exakte Zeitberechnung online: Ermitteln Sie Datumsdifferenzen, addieren Sie Fristen oder berechnen Sie Arbeitstage nach ISO 8601."
-            : "Exact time calculation online: determine date differences, add deadlines or calculate business days according to ISO 8601.",
+            ? "Exakte Zeitberechnung online: Ermitteln Sie Datumsdifferenzen, addieren Sie Fristen oder berechnen Sie Arbeitstage nach ISO 8601 Standard."
+            : "Exact time calculation online: determine date differences, add deadlines or calculate business days and working days per ISO 8601.",
         alternates: {
             canonical: `${siteUrl}/${locale}`,
             languages

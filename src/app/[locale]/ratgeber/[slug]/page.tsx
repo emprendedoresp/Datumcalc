@@ -1,4 +1,4 @@
-import { getArticleBySlug, articles } from '@/lib/articles';
+import { getArticleBySlug, articles, getArticles } from '@/lib/articles';
 import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { CalculatorCore } from '@/components/calculator/CalculatorCore';
@@ -8,18 +8,19 @@ import { INTENT_TRANSLATIONS } from '@/lib/seo/translations';
 export const revalidate = 86400; // 24 hours ISR
 
 export function generateStaticParams() {
-    return locales.flatMap(locale => 
-        articles.map(a => ({ 
+    return locales.flatMap(locale => {
+        const localeArticles = getArticles(locale);
+        return localeArticles.map(a => ({ 
             locale,
-            intent: INTENT_TRANSLATIONS[locale]['ratgeber'],
+            intent: INTENT_TRANSLATIONS[locale]['ratgeber'] || 'ratgeber',
             slug: a.slug 
-        }))
-    );
+        }));
+    });
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string; locale: string }> }) {
     const { locale, slug } = await params;
-    const article = getArticleBySlug(slug);
+    const article = getArticleBySlug(slug, locale);
     const siteUrl = "https://datums-rechner.com";
     
     if (!article) return {};
@@ -52,7 +53,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string; locale: string }> }) {
     const { locale, slug } = await params;
-    const article = getArticleBySlug(slug);
+    const article = getArticleBySlug(slug, locale);
     const t = await getTranslations({ locale, namespace: 'Article' });
 
     if (!article) notFound();

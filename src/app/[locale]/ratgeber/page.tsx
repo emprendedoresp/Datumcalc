@@ -1,43 +1,70 @@
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
+import { getArticles } from '@/lib/articles';
+import { getTranslations } from 'next-intl/server';
+import { locales } from '@/i18n/routing';
+import { INTENT_TRANSLATIONS } from '@/lib/seo/translations';
 
-export const metadata = {
-    title: 'Ratgeber Datumsberechnung - Alle Themen & Guides',
-    description: 'Vertiefende Guides und Erklärungen rund um Datumsberechnung, Fristen, Werktage und Schaltjahre.'
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale } = await params;
+    const isDe = locale === 'de';
+    const siteUrl = "https://datums-rechner.com";
+    const locSlug = INTENT_TRANSLATIONS[locale]['ratgeber'];
+    
+    // SEO Optimized Titles (55-60 chars)
+    const title = isDe 
+        ? "Ratgeber & Guides zur Datumsberechnung | Experten-Wissen ✓" 
+        : "Date Calculation Guides & Expert Knowledge | Tutorials ✓";
+        
+    const description = isDe
+        ? "Vertiefende Guides und Erklärungen rund um Datumsberechnung, Fristen, Werktage und Schaltjahre. Präzise nach ISO-8601 Standard."
+        : "In-depth guides and explanations about date calculation, deadlines, business days, and leap years. Precise according to ISO-8601.";
+
+    const languages: Record<string, string> = {};
+    locales.forEach(loc => {
+        languages[loc] = `${siteUrl}/${loc}/${INTENT_TRANSLATIONS[loc]['ratgeber']}`;
+    });
+    languages['x-default'] = `${siteUrl}/de/ratgeber`;
+
+    return {
+        title,
+        description,
+        alternates: {
+            canonical: `${siteUrl}/${locale}/${locSlug}`,
+            languages
+        }
+    };
+}
 
 export default async function RatgeberIndexPage({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
-    
-    // Correct links based on Authority Articles strategy pointing to existing @/lib/articles
-    const articles = [
-        { slug: 'arbeitstage-berechnen', title: 'Wie berechnet man Arbeitstage und Werktage?' },
-        { slug: 'schaltjahre-erklaert', title: 'Schaltjahre einfach erklärt: Warum es den 29. Februar gibt' },
-        { slug: 'wochen-im-jahr', title: 'Wie viele Wochen hat ein Jahr?' }
-    ];
+    const articles = getArticles(locale);
+    const isDe = locale === 'de';
 
     return (
         <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div className="text-center mb-16 space-y-4">
                 <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
-                    Ratgeber & Guides
+                    {isDe ? 'Ratgeber & Guides' : 'Expert Guides & Tutorials'}
                 </h1>
                 <p className="text-lg text-white/60 max-w-2xl mx-auto">
-                    Bauen Sie Fachwissen rund um Zeit, Fristen und Kalendersysteme auf.
+                    {isDe 
+                        ? 'Bauen Sie Fachwissen rund um Zeit, Fristen und Kalendersysteme auf.'
+                        : 'Build expert knowledge about time, deadlines, and calendar systems.'}
                 </p>
             </div>
 
             <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
                 {articles.map((article) => (
                     <article key={article.slug} className="bg-white/5 border border-white/10 p-6 rounded-[2rem] hover:border-neon/50 transition-colors group">
-                        <Link href={`/${locale}/ratgeber/${article.slug}`} className="block">
+                        <Link href={{ pathname: '/ratgeber/[slug]', params: { slug: article.slug } }} className="block">
                             <h2 className="text-xl font-bold mb-4 group-hover:text-neon transition-colors">
                                 {article.title}
                             </h2>
-                            <p className="text-white/60 mb-6">
-                                Lesen Sie unseren ausführlichen Guide zu diesem Thema und verstehen Sie die kalendarischen Zusammenhänge.
+                            <p className="text-white/60 mb-6 line-clamp-2">
+                                {article.description}
                             </p>
                             <span className="text-neon-blue font-semibold flex items-center gap-2">
-                                Artikel lesen
+                                {isDe ? 'Artikel lesen' : 'Read Article'}
                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                 </svg>
@@ -51,8 +78,5 @@ export default async function RatgeberIndexPage({ params }: { params: Promise<{ 
 }
 
 export function generateStaticParams() {
-    return [
-        { locale: 'de' },
-        { locale: 'en' }
-    ];
+    return locales.map(locale => ({ locale }));
 }
