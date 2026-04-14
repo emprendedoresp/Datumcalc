@@ -4,6 +4,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
+import { locales } from '@/i18n/routing';
 import "../globals.css";
 
 const inter = Inter({
@@ -23,9 +24,6 @@ export async function generateMetadata(
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     const { locale } = await params;
-
-    // Supported locales
-    const locales = ['de', 'en', 'es', 'fr', 'it', 'pt'];
     
     // Build language alternates
     const languages: Record<string, string> = {};
@@ -174,4 +172,8 @@ export default async function LocaleLayout({
             </body>
         </html>
     );
+}
+
+export function generateStaticParams() {
+    return locales.map((locale) => ({ locale }));
 }

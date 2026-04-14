@@ -2,6 +2,8 @@ import { CANONICAL_QUERIES } from '@/lib/seo/queryModel';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { locales } from '@/i18n/routing';
+
+export const dynamic = 'force-static';
 import { INTENT_TRANSLATIONS, translateSlug } from '@/lib/seo/translations';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; intent: string }> }) {

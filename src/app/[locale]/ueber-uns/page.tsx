@@ -1,5 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { locales } from '@/i18n/routing';
+
+export const dynamic = 'force-static';
 import { INTENT_TRANSLATIONS } from '@/lib/seo/translations';
 import { CalculatorCore } from '@/components/calculator/CalculatorCore';
 
@@ -117,4 +119,8 @@ export default async function AboutUsPage({ params }: { params: Promise<{ locale
             </div>
         </main>
     );
+}
+
+export function generateStaticParams() {
+    return locales.map((locale) => ({ locale }));
 }

@@ -2,6 +2,8 @@ import { Link } from '@/i18n/routing';
 import { getArticles } from '@/lib/articles';
 import { getTranslations } from 'next-intl/server';
 import { locales } from '@/i18n/routing';
+
+export const dynamic = 'force-static';
 import { INTENT_TRANSLATIONS } from '@/lib/seo/translations';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {

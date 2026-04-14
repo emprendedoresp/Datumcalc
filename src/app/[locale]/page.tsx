@@ -4,6 +4,8 @@ import { SmartInputBar } from '@/components/SmartInputBar';
 import { HomepageSEO } from '@/components/seo/HomepageSEO';
 import { locales } from '@/i18n/routing';
 
+export const dynamic = 'force-static';
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'Header' });
@@ -72,4 +74,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             <HomepageSEO locale={locale} />
         </div>
     );
+}
+
+export function generateStaticParams() {
+    return locales.map((locale) => ({ locale }));
 }
