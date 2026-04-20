@@ -211,14 +211,39 @@ export const articles: Record<string, Article[]> = {
           <p>For programmers and mathematicians, this standard is essential because date information can be sorted lexicographically correct. Our date calculator is internally based entirely on these standardized timestamps to guarantee the highest mathematical precision.</p>
         `
         }
-    ]
+    ],
+    es: [],
+    fr: [],
+    it: [],
+    pt: []
 };
 
 export function getArticles(locale: string): Article[] {
-    return articles[locale] || articles['de'];
+    const list = articles[locale] || [];
+    if (list.length > 0) return list;
+    
+    // Fallback order: EN -> DE
+    return articles['en'] || articles['de'] || [];
 }
 
 export function getArticleBySlug(slug: string, locale: string = 'de') {
-    const localeArticles = articles[locale] || articles['de'];
-    return localeArticles.find(a => a.slug === slug);
+    // 1. Try specifically in the requested locale
+    if (articles[locale]) {
+        const art = articles[locale].find(a => a.slug === slug);
+        if (art) return art;
+    }
+
+    // 2. Try in English (common for cross-language slug crawling)
+    if (articles['en']) {
+        const art = articles['en'].find(a => a.slug === slug);
+        if (art) return art;
+    }
+
+    // 3. Try in German (source locale)
+    if (articles['de']) {
+        const art = articles['de'].find(a => a.slug === slug);
+        if (art) return art;
+    }
+
+    return undefined;
 }

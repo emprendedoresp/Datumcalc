@@ -24,7 +24,7 @@ const intentToModeMap: Record<string, string> = {
     'age': 'age'
 };
 export const revalidate = 86400; // 24 hours ISR revalidation
-export const dynamicParams = false; // Disable on-demand rendering for any URL not in generateStaticParams
+export const dynamicParams = true; // Enable on-demand rendering for long-tail SEO URLs
 
 const ADD_REGEX = /^(\d+)-(tage|monate|jahre)-ab-heute$/;
 const DIFF_REGEX = /^tage-bis-(.+)$/;
@@ -171,9 +171,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
             : `How many days until ${displaySlug}? Get a precise result including leap year considerations and time spans.`;
     }
 
+    // Indexing control based on priority
+    const { isIndexable } = resolveCanonicalQuery(canonicalSlug);
+    const robots = isIndexable ? 'index, follow' : 'noindex, follow';
+    
     return {
         title,
         description,
+        robots,
         alternates: {
             canonical: correctUrl,
             languages
