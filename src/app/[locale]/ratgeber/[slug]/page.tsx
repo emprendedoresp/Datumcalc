@@ -8,12 +8,13 @@ import { INTENT_TRANSLATIONS } from '@/lib/seo/translations';
 
 export const revalidate = 86400; // 24 hours ISR
 
+export const dynamicParams = true;
+
 export function generateStaticParams() {
     return locales.flatMap(locale => {
         const localeArticles = getArticles(locale);
         return localeArticles.map(a => ({ 
             locale,
-            intent: INTENT_TRANSLATIONS[locale]['ratgeber'] || 'ratgeber',
             slug: a.slug 
         }));
     });
