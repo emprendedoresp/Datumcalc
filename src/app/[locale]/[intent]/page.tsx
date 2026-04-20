@@ -1,6 +1,6 @@
 import { CANONICAL_QUERIES } from '@/lib/seo/queryModel';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { locales } from '@/i18n/routing';
 
 export const dynamic = 'force-static';
