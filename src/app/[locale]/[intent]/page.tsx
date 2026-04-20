@@ -66,7 +66,6 @@ export default async function IntentHubPage({ params }: { params: Promise<{ loca
     // NORMALIZE: Ensure strictly localized intent URL
     const correctIntent = INTENT_TRANSLATIONS[locale][internalIntent] || internalIntent;
     if (intent !== correctIntent) {
-        const { redirect } = require('next/navigation');
         redirect(`/${locale}/${correctIntent}`);
     }
 

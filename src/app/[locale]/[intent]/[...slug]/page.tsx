@@ -128,7 +128,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     // STRICT ENFORCEMENT: Redirect if accessed via mismatched segments (like GSC errors)
     // Use 308 for permanent SEO redirection
     if (intent !== correctIntent || slugStr !== correctSlug) {
-        redirect(`${SITE_URL}/${locale}/${correctIntent}/${correctSlug}`); 
+        redirect(`/${locale}/${correctIntent}/${correctSlug}`); 
     }
 
     // Build hreflang alternates
