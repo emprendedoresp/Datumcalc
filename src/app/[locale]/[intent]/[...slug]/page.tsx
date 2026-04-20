@@ -217,6 +217,8 @@ export default async function ProgrammaticPage({
 }: {
     params: Promise<{ locale: string; intent: string; slug: string[] }>
 }) {
+    const { locale, intent, slug } = await params;
+
     // Resolve internal intent across ALL locales (robust)
     let internalIntent = Object.keys(INTENT_TRANSLATIONS[locale]).find(k => INTENT_TRANSLATIONS[locale][k] === intent);
     if (!internalIntent) {
