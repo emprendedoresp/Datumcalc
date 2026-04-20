@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { notFound, redirect, permanentRedirect } from 'next/navigation';
 import { locales } from '@/i18n/routing';
 
-export const dynamic = 'force-static';
+export const revalidate = 604800; // 7 days ISR revalidation
+export const dynamicParams = true;
 import { INTENT_TRANSLATIONS, translateSlug, getCanonicalPath } from '@/lib/seo/translations';
 import { SITE_URL } from '@/lib/constants';
 

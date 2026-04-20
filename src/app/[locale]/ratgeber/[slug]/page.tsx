@@ -6,7 +6,7 @@ import { locales } from '@/i18n/routing';
 import { SITE_URL } from '@/lib/constants';
 import { INTENT_TRANSLATIONS, getCanonicalPath } from '@/lib/seo/translations';
 
-export const revalidate = 86400; // 24 hours ISR
+export const revalidate = 604800; // 7 days ISR revalidation
 export const dynamicParams = true; // Allow on-demand rendering for localized guides
 
 export function generateStaticParams() {
