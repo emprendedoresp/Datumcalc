@@ -124,7 +124,7 @@ export default async function IntentHubPage({ params }: { params: Promise<{ loca
                                 const href = getCanonicalPath(locale, internalIntent!, locSlug);
                                 return (
                                     <li key={def.canonicalSlug}>
-                                        <Link href={href} className="text-white hover:text-neon flex items-center justify-between group p-3 rounded-lg hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
+                                        <Link href={href as any} className="text-white hover:text-neon flex items-center justify-between group p-3 rounded-lg hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
                                             <span>{locSlug.replace(/-/g, ' ')}</span>
                                             <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity text-neon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -149,7 +149,7 @@ export default async function IntentHubPage({ params }: { params: Promise<{ loca
                                 const href = getCanonicalPath(locale, internalIntent!, locSlug);
                                 return (
                                     <li key={def.canonicalSlug}>
-                                        <Link href={href} className="text-white hover:text-neon flex items-center justify-between group p-3 rounded-lg hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
+                                        <Link href={href as any} className="text-white hover:text-neon flex items-center justify-between group p-3 rounded-lg hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
                                             <span className="capitalize">{locSlug.replace(/-/g, ' ')}</span>
                                             <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity text-neon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
