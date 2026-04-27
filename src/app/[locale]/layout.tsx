@@ -29,10 +29,10 @@ export async function generateMetadata(
     // Build language alternates
     const languages: Record<string, string> = {};
     locales.forEach(loc => {
-        languages[loc] = `${siteUrl}/${loc}`;
+        languages[loc] = `${siteUrl}${loc === 'de' ? '' : `/${loc}`}`;
     });
     // Add x-default
-    languages['x-default'] = `${siteUrl}/de`;
+    languages['x-default'] = `${siteUrl}`;
 
     return {
         title: {
@@ -54,7 +54,7 @@ export async function generateMetadata(
         openGraph: {
             type: 'website',
             locale: locale,
-            url: `${siteUrl}/${locale}`,
+            url: `${siteUrl}${locale === 'de' ? '' : `/${locale}`}`,
             siteName: 'Datumsrechner',
             title: locale === 'de' ? "Datumsrechner | Exakte Zeitberechnung" : "Date Calculator | Exact time calculation",
             description: locale === 'de' 
