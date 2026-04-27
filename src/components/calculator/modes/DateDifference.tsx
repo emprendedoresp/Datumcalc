@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { calculateDateDifference } from '@/lib/calculator';
+import { format } from 'date-fns';
 import { useRecentCalculations } from '@/hooks/useRecentCalculations';
 import { TimelineVisualization } from '../TimelineVisualization';
 import { Copy, Share2, Check, BookmarkPlus } from 'lucide-react';

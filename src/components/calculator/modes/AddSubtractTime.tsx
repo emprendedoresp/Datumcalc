@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { calculateOffsetDate, TimeUnit, Operation } from '@/lib/calculator';
+import { format } from 'date-fns';
 import { useRecentCalculations } from '@/hooks/useRecentCalculations';
 import { Copy, Share2, Check, BookmarkPlus } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
