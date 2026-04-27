@@ -15,9 +15,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     // Build hreflang alternates
     const languages: Record<string, string> = {};
     locales.forEach(loc => {
-        languages[loc] = `${siteUrl}/${loc}`;
+        languages[loc] = `${siteUrl}${loc === 'de' ? '' : `/${loc}`}`;
     });
-    languages['x-default'] = `${siteUrl}/de`;
+    languages['x-default'] = `${siteUrl}`;
 
     return {
         title: locale === 'de' 
@@ -27,13 +27,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
             ? "Exakte Zeitberechnung online: Ermitteln Sie Datumsdifferenzen, addieren Sie Fristen oder berechnen Sie Arbeitstage nach ISO 8601 Standard."
             : "Exact time calculation online: determine date differences, add deadlines or calculate business days and working days per ISO 8601.",
         alternates: {
-            canonical: `${siteUrl}/${locale}`,
+            canonical: `${siteUrl}${locale === 'de' ? '' : `/${locale}`}`,
             languages
         },
         openGraph: {
             title: locale === 'de' ? "Der präzise Datumsrechner online" : "The precise date calculator online",
             description: locale === 'de' ? "Kostenlose Tools für Zeitspannen und Fristen." : "Free tools for time spans and deadlines.",
-            url: `${siteUrl}/${locale}`,
+            url: `${siteUrl}${locale === 'de' ? '' : `/${locale}`}`,
             type: 'website',
         }
     };

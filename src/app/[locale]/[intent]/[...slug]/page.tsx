@@ -1,17 +1,19 @@
 import { CalculatorCore } from '@/components/calculator/CalculatorCore';
 import { getTranslations } from 'next-intl/server';
-import { notFound, redirect } from 'next/navigation';
+import { notFound, redirect, permanentRedirect } from 'next/navigation';
 import { SEOContentBlock } from '@/components/seo/SEOContentBlock';
 import { FAQBlock } from '@/components/seo/FAQBlock';
 import { InternalLinksBlock } from '@/components/seo/InternalLinksBlock';
 import { ConversionTools } from '@/components/seo/ConversionTools';
 import { TrustSignals } from '@/components/seo/TrustSignals';
 import { addDays, addMonths, addYears, differenceInDays, format } from 'date-fns';
-import { de, enUS } from 'date-fns/locale';
+import { de, enUS, es, fr, it, pt } from 'date-fns/locale';
 import { resolveCanonicalQuery, CANONICAL_QUERIES } from '@/lib/seo/queryModel';
 import { locales } from '@/i18n/routing';
 import { SITE_URL } from '@/lib/constants';
-import { INTENT_TRANSLATIONS, translateSlug, reverseTranslateSlug } from '@/lib/seo/translations';
+import { INTENT_TRANSLATIONS, translateSlug, reverseTranslateSlug, getCanonicalPath } from '@/lib/seo/translations';
+
+const dateLocales: Record<string, any> = { de, en: enUS, es, fr, it, pt };
 
 const intentToModeMap: Record<string, string> = {
     'differenz': 'difference',
@@ -24,12 +26,15 @@ const intentToModeMap: Record<string, string> = {
     'age': 'age'
 };
 export const revalidate = 86400; // 24 hours ISR revalidation
-export const dynamicParams = false; // Disable on-demand rendering for any URL not in generateStaticParams
+export const dynamicParams = true; // Allow on-demand rendering for long-tail SEO URLs
 
-function computeInstantResult(intent: string, slugStr: string, localeStr: string) {
+async function computeInstantResult(intent: string, slugStr: string, localeStr: string) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const loc = localeStr === 'en' ? enUS : de;
+    const loc = dateLocales[localeStr] || de;
+    const tSlug = await getTranslations({ locale: localeStr, namespace: 'SlugPage' });
+    const tEvents = await getTranslations({ locale: localeStr, namespace: 'Events' });
+    const tCalc = await getTranslations({ locale: localeStr, namespace: 'Calculator' });
 
     try {
         if (intent === 'addieren' || intent === 'add') {
@@ -43,10 +48,11 @@ function computeInstantResult(intent: string, slugStr: string, localeStr: string
                 else if (unit === 'jahre') resultDate = addYears(today, amount);
 
                 if (resultDate) {
+                    const unitLabel = tCalc(unit === 'tage' ? 'days' : unit === 'monate' ? 'months' : 'years');
                     return {
-                        headline: `In ${amount} ${unit.charAt(0).toUpperCase() + unit.slice(1)} ist`,
+                        headline: `${tSlug('in')} ${amount} ${unitLabel} ${tSlug('is')}`,
                         highlight: format(resultDate, 'EEEE, dd. MMMM yyyy', { locale: loc }),
-                        subtext: `Ausgehend von heute (${format(today, 'dd.MM.yyyy')})`,
+                        subtext: `${tSlug('basedOn')} (${format(today, 'dd.MM.yyyy')})`,
                         dateValue: resultDate
                     };
                 }
@@ -63,24 +69,23 @@ function computeInstantResult(intent: string, slugStr: string, localeStr: string
 
                 if (eventStr === 'weihnachten') {
                     targetDate = new Date(today.getFullYear(), 11, 25);
-                    eventName = 'Weihnachten';
+                    eventName = tEvents('weihnachten');
                     found = true;
                 } else if (eventStr === 'silvester') {
                     targetDate = new Date(today.getFullYear(), 11, 31);
-                    eventName = 'Silvester';
+                    eventName = tEvents('silvester');
                     found = true;
                 } else if (eventStr === 'sommeranfang') {
                     targetDate = new Date(today.getFullYear(), 5, 21);
-                    eventName = 'Sommeranfang';
+                    eventName = tEvents('sommeranfang');
                     found = true;
                 } else if (eventStr === 'ostern') {
                     const yr = today.getFullYear();
-                    // simplistic easter approx for MVP
                     if (yr === 2024) targetDate = new Date(2024, 2, 31);
                     else if (yr === 2025) targetDate = new Date(2025, 3, 20);
                     else if (yr === 2026) targetDate = new Date(2026, 3, 5);
                     else targetDate = new Date(yr, 3, 10);
-                    eventName = 'Ostern';
+                    eventName = tEvents('ostern');
                     found = true;
                 }
 
@@ -90,9 +95,9 @@ function computeInstantResult(intent: string, slugStr: string, localeStr: string
                     }
                     const diff = differenceInDays(targetDate, today);
                     return {
-                        headline: `Bis ${eventName} sind es noch`,
-                        highlight: `${diff} Tage`,
-                        subtext: `Das Datum ist der ${format(targetDate, 'dd. MMMM yyyy', { locale: loc })}`,
+                        headline: `${tSlug('until')} ${eventName} ${tSlug('areYet')}`,
+                        highlight: `${diff} ${tCalc('days')}`,
+                        subtext: `${tSlug('theDateIs')} ${format(targetDate, 'dd. MMMM yyyy', { locale: loc })}`,
                         dateValue: targetDate
                     };
                 }
@@ -108,29 +113,39 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     const slugStr = slug.join('-');
     const siteUrl = SITE_URL;
     
-    // Resolve internal intent and slug
-    const internalIntent = Object.keys(INTENT_TRANSLATIONS[locale]).find(k => INTENT_TRANSLATIONS[locale][k] === intent) || intent;
+    // Resolve internal intent across ALL locales (robust)
+    let internalIntent = Object.keys(INTENT_TRANSLATIONS[locale]).find(k => INTENT_TRANSLATIONS[locale][k] === intent);
+    if (!internalIntent) {
+        for (const loc of locales) {
+            internalIntent = Object.keys(INTENT_TRANSLATIONS[loc]).find(k => INTENT_TRANSLATIONS[loc][k] === intent);
+            if (internalIntent) break;
+        }
+    }
+    if (!internalIntent) return {}; // Let it 404 if truly unknown
+
     const canonicalSlug = reverseTranslateSlug(slugStr, locale);
     
     // NORMALIZE: Ensure we always point to the strictly correct localized URL
-    const correctIntent = INTENT_TRANSLATIONS[locale][internalIntent] || internalIntent;
     const correctSlug = translateSlug(canonicalSlug, locale);
-    const correctUrl = `${siteUrl}/${locale}/${correctIntent}/${correctSlug}`;
+    const correctPath = getCanonicalPath(locale, internalIntent, correctSlug);
 
     // STRICT ENFORCEMENT: Redirect if accessed via mismatched segments (like GSC errors)
-    if (intent !== correctIntent || slugStr !== correctSlug) {
-        redirect(correctUrl); // Next.js redirects are 307 by default, but typically for SEO we want 301 if it's a permanent move. 
-        // Note: next/navigation redirect doesn't support 301 in server components easily without 'permanentRedirect'. 
+    const expectedIntent = INTENT_TRANSLATIONS[locale][internalIntent] || internalIntent;
+    if (intent !== expectedIntent || slugStr !== correctSlug) {
+        permanentRedirect(correctPath); 
     }
 
-    // Build hreflang alternates
+    const correctUrl = `${SITE_URL}${correctPath}`;
+
+    // Build hreflang alternates (prefix-aware)
     const languages: Record<string, string> = {};
     locales.forEach(loc => {
-        const locIntent = INTENT_TRANSLATIONS[loc][internalIntent] || internalIntent;
         const locSlug = translateSlug(canonicalSlug, loc);
-        languages[loc] = `${siteUrl}/${loc}/${locIntent}/${locSlug}`;
+        const locPath = getCanonicalPath(loc, internalIntent, locSlug);
+        languages[loc] = `${SITE_URL}${locPath}`;
     });
-    languages['x-default'] = `${siteUrl}/de/${INTENT_TRANSLATIONS['de'][internalIntent]}/${translateSlug(canonicalSlug, 'de')}`;
+    const deSlug = translateSlug(canonicalSlug, 'de');
+    languages['x-default'] = `${SITE_URL}${getCanonicalPath('de', internalIntent, deSlug)}`;
 
     // SERP Domination formatting
     const isDe = locale === 'de';
@@ -167,9 +182,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
             : `How many days until ${displaySlug}? Get a precise result including leap year considerations and time spans.`;
     }
 
+    // robots: prevent index bloat for non-canonical number variations
+    const isPriority = CANONICAL_QUERIES[canonicalSlug]?.isIndexable;
+    const robots = isPriority ? 'index, follow' : 'noindex, follow';
+
     return {
         title,
         description,
+        robots,
         alternates: {
             canonical: correctUrl,
             languages
@@ -205,44 +225,51 @@ export default async function ProgrammaticPage({
     params: Promise<{ locale: string; intent: string; slug: string[] }>
 }) {
     const { locale, intent, slug } = await params;
-    const internalIntent = Object.keys(INTENT_TRANSLATIONS[locale]).find(k => INTENT_TRANSLATIONS[locale][k] === intent) || intent;
+    const t = await getTranslations({ locale, namespace: 'SlugPage' });
+
+    let internalIntent = Object.keys(INTENT_TRANSLATIONS[locale]).find(k => INTENT_TRANSLATIONS[locale][k] === intent);
+    if (!internalIntent) {
+        for (const loc of locales) {
+            internalIntent = Object.keys(INTENT_TRANSLATIONS[loc]).find(k => INTENT_TRANSLATIONS[loc][k] === intent);
+            if (internalIntent) break;
+        }
+    }
+    if (!internalIntent) notFound();
+
     const mode = intentToModeMap[internalIntent.toLowerCase()];
     const slugStr = slug.join('-');
     const canonicalSlugStr = reverseTranslateSlug(slugStr, locale);
     
-    // NORMALIZE & REDIRECT: Ensure strictly localized URLs
-    const correctIntent = INTENT_TRANSLATIONS[locale][internalIntent] || internalIntent;
     const correctSlug = translateSlug(canonicalSlugStr, locale);
+    const correctPath = getCanonicalPath(locale, internalIntent, correctSlug);
+    const expectedIntent = INTENT_TRANSLATIONS[locale][internalIntent] || internalIntent;
     
-    if (intent !== correctIntent || slugStr !== correctSlug) {
-        redirect(`/${locale}/${correctIntent}/${correctSlug}`);
+    if (intent !== expectedIntent || slugStr !== correctSlug) {
+        permanentRedirect(correctPath);
     }
 
     if (!mode) {
         notFound();
     }
 
-    // Anti-Cannibalization / Smart Fallback
     const { canonicalSlug, isExact } = resolveCanonicalQuery(canonicalSlugStr);
     
     if (!isExact && canonicalSlug) {
-        // Fallback redirects to closest match canonical
-        const locIntent = INTENT_TRANSLATIONS[locale][internalIntent] || internalIntent;
         const locSlug = translateSlug(canonicalSlug, locale);
-        redirect(`/${locale}/${locIntent}/${locSlug}`);
+        const targetPath = getCanonicalPath(locale, internalIntent, locSlug);
+        redirect(targetPath);
     } 
 
-    const instantResult = computeInstantResult(internalIntent.toLowerCase(), canonicalSlugStr, locale);
+    const instantResult = await computeInstantResult(internalIntent.toLowerCase(), canonicalSlugStr, locale);
 
-    // Schema implementations
     const isDe = locale === 'de';
     const breadcrumbSchema = {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
-            { "@type": "ListItem", "position": 1, "name": isDe ? "Startseite" : "Home", "item": `${SITE_URL}/${locale}` },
-            { "@type": "ListItem", "position": 2, "name": isDe ? (mode === 'add_subtract' ? 'Datumsrechner' : 'Tage Zählen') : (mode === 'add_subtract' ? 'Date Calculator' : 'Days Counter'), "item": `${SITE_URL}/${locale}/${intent}` },
-            { "@type": "ListItem", "position": 3, "name": correctSlug.replace(/-/g, ' ') }
+            { "@type": "ListItem", "position": 1, "name": isDe ? "Startseite" : "Home", "item": `${SITE_URL}${locale === 'de' ? '' : `/${locale}`}` },
+            { "@type": "ListItem", "position": 2, "name": isDe ? (mode === 'add_subtract' ? 'Datumsrechner' : 'Tage Zählen') : (mode === 'add_subtract' ? 'Date Calculator' : 'Days Counter'), "item": `${SITE_URL}${getCanonicalPath(locale, internalIntent)}` },
+            { "@type": "ListItem", "position": 3, "name": correctSlug.replace(/-/g, ' '), "item": `${SITE_URL}${correctPath}` }
         ]
     };
 
@@ -260,7 +287,6 @@ export default async function ProgrammaticPage({
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
 
-            {/* 1. Direct Answer (Above the Fold) & E-E-A-T */}
             <header className="w-full text-center space-y-8 animate-slide-up-fade">
                 {instantResult ? (
                     <>
@@ -280,33 +306,29 @@ export default async function ProgrammaticPage({
                             {intent} {slugStr.replace(/-/g, ' ')}
                         </h1>
                         <p className="text-xl text-white/60 max-w-2xl mx-auto">
-                            Exakte ISO-8601 konforme Berechnung für {slugStr.replace(/-/g, ' ')}.
+                            {t('description', { slug: slugStr.replace(/-/g, ' ') })}
                         </p>
                     </>
                 )}
 
-                {/* E-E-A-T Verified Badge */}
                 <div className="flex justify-center mt-6">
                     <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 text-xs font-bold text-green-400 uppercase tracking-widest backdrop-blur-md">
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
-                        Mathematisch & Kalendarisch verifiziert
+                        {t('verified')}
                     </span>
                 </div>
             </header>
 
-            {/* UX layer */}
             <section aria-label="Share and Convert" className="animate-slide-up-fade" style={{ animationDelay: '0.1s' }}>
                 <ConversionTools />
             </section>
 
-            {/* 2. Embedded Core Calculator */}
             <section aria-label="Interaktiver Rechner" className="w-full max-w-5xl mx-auto rounded-[2.5rem] border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-3xl p-6 md:p-10 shadow-[0_0_50px_rgba(0,0,0,0.5)] animate-slide-up-fade" style={{ animationDelay: '0.2s' }}>
                 <CalculatorCore initialMode={mode as any} />
             </section>
 
-            {/* 3. SEO Hub & Content Layout */}
             <section aria-label="Detaillierte Informationen" className="max-w-4xl mx-auto space-y-12 animate-slide-up-fade" style={{ animationDelay: '0.3s' }}>
                 <SEOContentBlock intent={intent} slug={slugStr} locale={locale} />
                 <InternalLinksBlock locale={locale} intent={intent} slug={slugStr} />
