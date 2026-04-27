@@ -20,7 +20,7 @@ export function LanguageSwitcher() {
             // @ts-expect-error - dynamic pathnames typing
             router.replace({ pathname, params: cleanParams }, { locale: newLocale as any });
         } catch (e) {
-            router.push(`/${newLocale === 'de' ? '' : newLocale}`);
+            router.push(`/${newLocale === 'de' ? '' : newLocale}` as any);
         }
     };
 

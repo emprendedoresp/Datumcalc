@@ -73,7 +73,7 @@ export function Header() {
             router.replace({ pathname, params: cleanParams }, { locale: newLocale as any });
         } catch (e) {
             // Fallback for edge cases where the path might not be in the map
-            router.push(`/${newLocale === 'de' ? '' : newLocale}`);
+            router.push(`/${newLocale === 'de' ? '' : newLocale}` as any);
         }
         
         setLangOpen(false);
