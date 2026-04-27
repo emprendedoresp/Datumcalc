@@ -71,13 +71,18 @@ export const SLUG_TOKEN_TRANSLATIONS: Record<string, Record<string, string>> = {
 
 /**
  * Translates a German slug into a localized one.
+ * Sorts by length descending to prevent substring collisions (e.g. 'tage' in 'tage-bis').
  */
 export function translateSlug(slug: string, locale: string): string {
     const tokens = locale === 'de' ? {} : SLUG_TOKEN_TRANSLATIONS[locale];
     if (!tokens) return slug;
 
     let localized = slug;
-    Object.entries(SLUG_TOKEN_TRANSLATIONS['de']).forEach(([key, deVal]) => {
+    // Sort keys by length descending to replace "tage-bis" before "tage"
+    const sortedKeys = Object.entries(SLUG_TOKEN_TRANSLATIONS['de'])
+        .sort((a, b) => b[1].length - a[1].length);
+
+    sortedKeys.forEach(([key, deVal]) => {
         const regex = new RegExp(`\\b${deVal}\\b`, 'g');
         localized = localized.replace(regex, tokens[key] || deVal);
     });
@@ -87,29 +92,35 @@ export function translateSlug(slug: string, locale: string): string {
 /**
  * Reverses a localized slug back to its German canonical version.
  * Greedily searches across ALL locales to handle "mixed" URLs from GSC.
+ * Sorts by length descending to prevent substring collisions.
  */
 export function reverseTranslateSlug(slug: string, locale?: string): string {
-    // 1. Try specified locale first (Performance)
     let canonical = slug;
-    if (locale && locale !== 'de' && SLUG_TOKEN_TRANSLATIONS[locale]) {
-        Object.entries(SLUG_TOKEN_TRANSLATIONS[locale]).forEach(([key, locVal]) => {
+
+    // Helper to apply reverse translation for a specific locale tokenset
+    const applyReverse = (loc: string) => {
+        const tokens = SLUG_TOKEN_TRANSLATIONS[loc];
+        if (!tokens) return;
+        
+        const sortedEntries = Object.entries(tokens)
+            .sort((a, b) => b[1].length - a[1].length);
+
+        sortedEntries.forEach(([key, locVal]) => {
             const regex = new RegExp(`\\b${locVal}\\b`, 'g');
             canonical = canonical.replace(regex, SLUG_TOKEN_TRANSLATIONS['de'][key]);
         });
+    };
+
+    // 1. Try specified locale first (Performance & Accuracy)
+    if (locale && locale !== 'de') {
+        applyReverse(locale);
     }
 
-    // 2. If it still looks non-German or we want exhaustive search, check ALL locales
-    // This handles cases where a bot puts a French word in a Spanish URL
+    // 2. Exhaustive search across ALL locales to handle mixed-language "Redirect Error" URLs
     const allLocales = Object.keys(SLUG_TOKEN_TRANSLATIONS);
     allLocales.forEach(loc => {
-        if (loc === 'de') return;
-        const tokens = SLUG_TOKEN_TRANSLATIONS[loc];
-        Object.entries(tokens).forEach(([key, locVal]) => {
-            // Only replace if the target canonical token isn't already there 
-            // (prevents double translation issues if words overlap)
-            const regex = new RegExp(`\\b${locVal}\\b`, 'g');
-            canonical = canonical.replace(regex, SLUG_TOKEN_TRANSLATIONS['de'][key]);
-        });
+        if (loc === 'de' || loc === locale) return;
+        applyReverse(loc);
     });
 
     return canonical;

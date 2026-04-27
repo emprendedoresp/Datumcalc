@@ -10,20 +10,26 @@ import { SITE_URL } from '@/lib/constants';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; intent: string }> }) {
     const { locale, intent } = await params;
-    const siteUrl = SITE_URL;
     
     // Resolve internal intent
-    const internalIntent = Object.keys(INTENT_TRANSLATIONS[locale]).find(k => INTENT_TRANSLATIONS[locale][k] === intent) || intent;
+    let internalIntent = Object.keys(INTENT_TRANSLATIONS[locale]).find(k => INTENT_TRANSLATIONS[locale][k] === intent);
+    if (!internalIntent) {
+        for (const loc of locales) {
+            internalIntent = Object.keys(INTENT_TRANSLATIONS[loc]).find(k => INTENT_TRANSLATIONS[loc][k] === intent);
+            if (internalIntent) break;
+        }
+    }
+    const finalIntent = internalIntent || intent;
     
-    const fullUrl = `${siteUrl}/${locale}/${intent}`;
+    const canonicalPath = getCanonicalPath(locale, finalIntent);
+    const fullUrl = `${SITE_URL}${canonicalPath}`;
     
     // Build hreflang alternates
     const languages: Record<string, string> = {};
     locales.forEach(loc => {
-        const locIntent = INTENT_TRANSLATIONS[loc][internalIntent] || internalIntent;
-        languages[loc] = `${siteUrl}/${loc}/${locIntent}`;
+        languages[loc] = `${SITE_URL}${getCanonicalPath(loc, finalIntent)}`;
     });
-    languages['x-default'] = `${siteUrl}/de/${INTENT_TRANSLATIONS['de'][internalIntent] || internalIntent}`;
+    languages['x-default'] = `${SITE_URL}${getCanonicalPath('de', finalIntent)}`;
 
     const title = locale === 'de' 
         ? `${intent.charAt(0).toUpperCase() + intent.slice(1)} - Datumsrechner Hub ✓`

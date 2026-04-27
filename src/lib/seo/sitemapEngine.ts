@@ -26,13 +26,21 @@ function getLocalizedUrl(path: string, locale: string) {
 }
 
 export function getCoreSitemapUrls() {
-    const paths = ['', 'ratgeber', 'ueber-uns', 'datenschutz', 'impressum', 'agb'];
+    const internalPaths = ['', 'ratgeber', 'ueber-uns', 'datenschutz', 'impressum', 'agb'];
     const urls: any[] = [];
 
     locales.forEach(locale => {
-        paths.forEach(path => {
+        internalPaths.forEach(path => {
+            let canonicalPath = '';
+            if (path === '') {
+                canonicalPath = locale === 'de' ? '/' : `/${locale}`;
+            } else {
+                // Use getCanonicalPath to resolve translated segments like /en/guide
+                canonicalPath = getCanonicalPath(locale, path);
+            }
+
             urls.push({
-                url: getLocalizedUrl(path, locale),
+                url: `${SITE_URL}${canonicalPath}`,
                 lastModified: STATIC_LASTMOD,
                 changeFrequency: path === '' ? 'daily' : 'monthly',
                 priority: path === '' ? 1.0 : 0.5

@@ -125,8 +125,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     const correctPath = getCanonicalPath(locale, internalIntent, correctSlug);
 
     // STRICT ENFORCEMENT: Redirect if accessed via mismatched segments (like GSC errors)
-    // Use permanentRedirect (308) for better SEO
-    if (intent !== (INTENT_TRANSLATIONS[locale][internalIntent] || internalIntent) || slugStr !== correctSlug) {
+    const expectedIntent = INTENT_TRANSLATIONS[locale][internalIntent] || internalIntent;
+    if (intent !== expectedIntent || slugStr !== correctSlug) {
         permanentRedirect(correctPath); 
     }
 
@@ -238,8 +238,9 @@ export default async function ProgrammaticPage({
     // NORMALIZE & REDIRECT: Ensure strictly localized URLs
     const correctSlug = translateSlug(canonicalSlugStr, locale);
     const correctPath = getCanonicalPath(locale, internalIntent, correctSlug);
+    const expectedIntent = INTENT_TRANSLATIONS[locale][internalIntent] || internalIntent;
     
-    if (intent !== (INTENT_TRANSLATIONS[locale][internalIntent] || internalIntent) || slugStr !== correctSlug) {
+    if (intent !== expectedIntent || slugStr !== correctSlug) {
         permanentRedirect(correctPath);
     }
 
@@ -251,10 +252,10 @@ export default async function ProgrammaticPage({
     const { canonicalSlug, isExact } = resolveCanonicalQuery(canonicalSlugStr);
     
     if (!isExact && canonicalSlug) {
-        // Fallback redirects to closest match canonical
-        const locIntent = INTENT_TRANSLATIONS[locale][internalIntent] || internalIntent;
+        // Fallback redirects to closest match canonical using robust path resolver
         const locSlug = translateSlug(canonicalSlug, locale);
-        redirect(`/${locale}/${locIntent}/${locSlug}`);
+        const targetPath = getCanonicalPath(locale, internalIntent, locSlug);
+        redirect(targetPath);
     } 
 
     const instantResult = computeInstantResult(internalIntent.toLowerCase(), canonicalSlugStr, locale);
@@ -265,9 +266,9 @@ export default async function ProgrammaticPage({
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
-            { "@type": "ListItem", "position": 1, "name": isDe ? "Startseite" : "Home", "item": `${SITE_URL}/${locale}` },
-            { "@type": "ListItem", "position": 2, "name": isDe ? (mode === 'add_subtract' ? 'Datumsrechner' : 'Tage Zählen') : (mode === 'add_subtract' ? 'Date Calculator' : 'Days Counter'), "item": `${SITE_URL}/${locale}/${intent}` },
-            { "@type": "ListItem", "position": 3, "name": correctSlug.replace(/-/g, ' ') }
+            { "@type": "ListItem", "position": 1, "name": isDe ? "Startseite" : "Home", "item": `${SITE_URL}${locale === 'de' ? '' : `/${locale}`}` },
+            { "@type": "ListItem", "position": 2, "name": isDe ? (mode === 'add_subtract' ? 'Datumsrechner' : 'Tage Zählen') : (mode === 'add_subtract' ? 'Date Calculator' : 'Days Counter'), "item": `${SITE_URL}${getCanonicalPath(locale, internalIntent)}` },
+            { "@type": "ListItem", "position": 3, "name": correctSlug.replace(/-/g, ' '), "item": `${SITE_URL}${correctPath}` }
         ]
     };
 
