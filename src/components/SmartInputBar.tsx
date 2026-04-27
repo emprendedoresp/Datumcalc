@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { Search } from 'lucide-react';
 import { INTENT_TRANSLATIONS } from '@/lib/seo/translations';
 
 export function SmartInputBar() {

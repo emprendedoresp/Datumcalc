@@ -1,6 +1,6 @@
 import { CANONICAL_QUERIES } from '@/lib/seo/queryModel';
-import Link from 'next/link';
-import { notFound, redirect, permanentRedirect } from 'next/navigation';
+import { Link } from '@/i18n/routing';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { locales } from '@/i18n/routing';
 
 export const revalidate = 604800; // 7 days ISR revalidation
@@ -119,16 +119,20 @@ export default async function IntentHubPage({ params }: { params: Promise<{ loca
                             {locale === 'de' ? 'Häufige Berechnungen' : 'Popular Calculations'}
                         </h2>
                         <ul className="space-y-3">
-                            {transactional.map((def) => (
-                                <li key={def.canonicalSlug}>
-                                    <Link href={`/${locale}/${intent}/${translateSlug(def.canonicalSlug, locale)}`} className="text-white hover:text-neon flex items-center justify-between group p-3 rounded-lg hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
-                                        <span>{translateSlug(def.canonicalSlug, locale).replace(/-/g, ' ')}</span>
-                                        <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity text-neon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                        </svg>
-                                    </Link>
-                                </li>
-                            ))}
+                            {transactional.map((def) => {
+                                const locSlug = translateSlug(def.canonicalSlug, locale);
+                                const href = getCanonicalPath(locale, internalIntent!, locSlug);
+                                return (
+                                    <li key={def.canonicalSlug}>
+                                        <Link href={href} className="text-white hover:text-neon flex items-center justify-between group p-3 rounded-lg hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
+                                            <span>{locSlug.replace(/-/g, ' ')}</span>
+                                            <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity text-neon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                            </svg>
+                                        </Link>
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </div>
                 )}
@@ -140,16 +144,20 @@ export default async function IntentHubPage({ params }: { params: Promise<{ loca
                             {locale === 'de' ? 'Meilensteine & Events' : 'Milestones & Events'}
                         </h2>
                         <ul className="space-y-3">
-                            {informational.map((def) => (
-                                <li key={def.canonicalSlug}>
-                                    <Link href={`/${locale}/${intent}/${translateSlug(def.canonicalSlug, locale)}`} className="text-white hover:text-neon flex items-center justify-between group p-3 rounded-lg hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
-                                        <span className="capitalize">{translateSlug(def.canonicalSlug, locale).replace(/-/g, ' ')}</span>
-                                        <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity text-neon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                        </svg>
-                                    </Link>
-                                </li>
-                            ))}
+                            {informational.map((def) => {
+                                const locSlug = translateSlug(def.canonicalSlug, locale);
+                                const href = getCanonicalPath(locale, internalIntent!, locSlug);
+                                return (
+                                    <li key={def.canonicalSlug}>
+                                        <Link href={href} className="text-white hover:text-neon flex items-center justify-between group p-3 rounded-lg hover:bg-white/5 transition-colors border border-transparent hover:border-white/5">
+                                            <span className="capitalize">{locSlug.replace(/-/g, ' ')}</span>
+                                            <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity text-neon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                            </svg>
+                                        </Link>
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </div>
                 )}

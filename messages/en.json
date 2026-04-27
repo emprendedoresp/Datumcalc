@@ -88,5 +88,21 @@
         "yearsAbbr": "y",
         "monthsAbbr": "m",
         "daysAbbr": "d"
+    },
+    "Events": {
+        "weihnachten": "Christmas",
+        "silvester": "New Year's Eve",
+        "sommeranfang": "Summer Solstice",
+        "ostern": "Easter"
+    },
+    "SlugPage": {
+        "in": "In",
+        "is": "is",
+        "basedOn": "Based on today",
+        "until": "Until",
+        "areYet": "there are still",
+        "theDateIs": "The date is",
+        "verified": "Mathematically & Calendrically verified",
+        "description": "Exact ISO-8601 compliant calculation for {slug}."
     }
 }
